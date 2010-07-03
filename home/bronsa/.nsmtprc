@@ -1,0 +1,7 @@
+relayhost=smtp.gmail.com
+fromaddr=brobronsa@gmail.com
+auth_user=brobronsa@gmail.com
+auth_pass=asdasdasd
+port=587
+use_starttls=True
+

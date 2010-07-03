@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" href="http://www.lyricsplugin.com/winamp03/css/plugin.css" />
+	<script language="javascript" type="text/javascript" src="http://www.lyricsplugin.com/winamp03/javascript/plugin.js"></script>
+</head>
+<body>
+
+<div id="title">
+asd
+</div>
+
+<div id="artist">
+<a href="http://74.54.135.2/ref.php?artist=qwe" target="_blank">qwe</a>
+</div>
+
+<div id="lyrics">
+
+</div>
+
+<div id="admin">
+[ <a href="javascript:edit('qwe', 'asd')">Edit</a> ] [ <a href="http://www.google.com/search?hl=en&q=qwe asd lyrics" target="_blank" rel="nofollow">Search Google</a> ] [ <a href="javascript:configure()">Configure</a> ]
+</div>
+
+<div id="header">
+</div>
+
+</body>
+</html>

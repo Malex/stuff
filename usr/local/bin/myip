@@ -1,0 +1,2 @@
+#!/bin/sh
+echo `curl -s http://checkip.dyndns.org/ | grep -o "[[:digit:].]\+"`

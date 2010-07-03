@@ -1,0 +1,75 @@
+#!/bin/sh
+
+chartlyrics ()
+{
+	wget -qO- --no-cookies "http://api.chartlyrics.com/apiv1.asmx/SearchLyricDirect?artist=$1&song=$2" > .xml
+	grep "<Lyric>" .xml &> /dev/null || return 1
+	[ "`sed -n 6p .xml | sed -e \"s/  <LyricArtist>//\" -e \"s/<\/LyricArtist>//\" | tr \"[:upper:]\" \"[:lower:]\"`" = "`echo $2 | tr \"[:upper:]\" \"[:lower:]\"`" ] || return 1
+	cat .xml | tail -n$((`wc -l .xml |  sed "s/\.xml//"` - 10)) | sed -e "s/  <Lyric>//" -e "s/<\/Lyric>//" -e "s/<\/GetLyricResult>//" > "/home/bronsa/.lyrics/$author/$song" && less "/home/bronsa/.lyrics/$author/$song" && rm .xml
+	return 0
+}
+
+lyricsplugin ()
+{
+	wget -qO- --no-cookies "http://www.lyricsplugin.com/winamp03/plugin/?artist=$1&title=$2"  > .xml
+	[ "`sed -n 11p .xml | tr \"[:upper:]\" \"[:lower:]\"`" = "`echo $2 | tr \"[:upper:]\" \"[:lower:]\"`" ] || return 1
+	length=$((`wc -l .xml |  sed "s/\.xml//"` - 18))
+	body="`cat .xml | tail -n$length | head -n$(($length - 11)) | sed \"s/<br \/>//g\"`"
+	[ ! "$body" ] && return 1
+	echo "$body" > "/home/bronsa/.lyrics/$author/$song" && less "/home/bronsa/.lyrics/$author/$song" && rm .xml
+	return 0
+}
+
+showhelp ()
+{
+	echo "Usage: ${0##*/} options"
+	echo -e "\t -a author\tset author"
+	echo -e "\t -s song\tset song's title"
+	echo -e "\t -c\t\tclean"
+	echo -e "\t -h\t\tshow this help"
+	exit 0
+}
+
+cleandb ()
+{
+	echo "cleaning database.."
+
+	rm -rf "/home/bronsa/.lyrics/"
+	mkdir "/home/bronsa/.lyrics/"
+
+	echo "database clean't."
+	exit 0
+}
+
+promptdata ()
+{
+	while [ ! "$author" ]; do
+		echo -n "Prompt for author: "
+		read author
+	done
+
+	while [ ! "$song" ]; do
+		echo -n "Prompt for song title: "
+		read song
+	done
+}
+
+while getopts a:s:hc options; do
+	case "$options" in
+		a) author="$OPTARG";;
+		s) song="$OPTARG";;
+		h) showhelp;;
+		c) cleandb;;
+		*) echo "wrong option, \"type ${0##*/} -h\"to view usage" && exit 1;;
+	esac
+done
+
+[ "$author" ] && [ "$song" ] || promptdata
+
+author="`echo $author | tr \"[:upper:]\" \"[:lower:]\"`"
+song="`echo $song | tr \"[:upper:]\" \"[:lower:]\"`"
+
+[ ! -d "/home/bronsa/.lyrics/$author" ] && mkdir -p "/home/bronsa/.lyrics/$author"
+[ -f "/home/bronsa/.lyrics/$author/$song" ] && less "/home/bronsa/.lyrics/$author/$song" && exit 0
+
+(chartlyrics "$author" "$song" || lyricsplugin "$author" "$song") || (echo "No lyric found."; [ "`ls -A \"/home/bronsa/.lyrics/$author\"`" ] || rm -rf "/home/bronsa/.lyrics/$author"; exit 1)

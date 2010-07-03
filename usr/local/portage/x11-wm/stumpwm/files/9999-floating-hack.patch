@@ -1,0 +1,63 @@
+diff --git a/floating-group.lisp b/floating-group.lisp
+index b6cfc70..1bf23b0 100644
+--- a/floating-group.lisp
++++ b/floating-group.lisp
+@@ -109,6 +109,9 @@
+   ((current-window :accessor float-group-current-window))
+   )
+ 
++(defmethod group-init ((group float-group))
++  )
++
+ (defmethod group-add-window ((group float-group) window &key &allow-other-keys)
+   (change-class window 'float-window)
+   (float-window-align window)
+diff --git a/group.lisp b/group.lisp
+index aa441d2..a5fa566 100644
+--- a/group.lisp
++++ b/group.lisp
+@@ -37,6 +37,8 @@
+    (name :initarg :name :accessor group-name)))
+ 
+ ;;; The group API
++(defgeneric group-init (group)
++  (:documentation "Called on all groups while stumpwm is starting up."))
+ (defgeneric group-add-window (group window &key &allow-other-keys)
+   (:documentation "Called when a window is added to the group. All
+ house keeping is already taken care of. Only the group's specific
+diff --git a/stumpwm.lisp b/stumpwm.lisp
+index cf3fc2e..9d6977f 100644
+--- a/stumpwm.lisp
++++ b/stumpwm.lisp
+@@ -231,12 +231,8 @@ of those expired."
+                  (mapc 'unhide-window (reverse (group-windows (screen-current-group s))))
+                  ;; update groups
+                  (dolist (g (reverse (screen-groups s)))
+-                   ;; raise the current window and frame.
+                    (dformat 3 "Group windows: ~S~%" (group-windows g))
+-                   (let ((window (first (group-windows g))))
+-                     (if window
+-                         (focus-frame g (window-frame window))
+-                         (focus-frame g (tile-group-current-frame g)))))
++                   (group-init g))
+                  ;; switch to the (old) current group.
+                  (let ((netwm-id (first (xlib:get-property (screen-root s) :_NET_CURRENT_DESKTOP))))
+                    (when (and netwm-id (< netwm-id (length (screen-groups s))))
+diff --git a/tile-group.lisp b/tile-group.lisp
+index 6408dcd..4687e80 100644
+--- a/tile-group.lisp
++++ b/tile-group.lisp
+@@ -37,6 +37,12 @@
+     (setf (tile-group-frame-tree group) heads
+           (tile-group-current-frame group) (first heads))))
+ 
++(defmethod group-init ((group tile-group))
++  (let ((window (first (group-windows group))))
++    (if window
++        (focus-frame group (window-frame window))
++        (focus-frame group (tile-group-current-frame group)))))
++
+ (defmethod group-wake-up ((group tile-group))
+   (focus-frame group (tile-group-current-frame group))
+   ;; doesn't get called by focus-frame
+

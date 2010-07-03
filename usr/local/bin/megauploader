@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cookie=*cookie*
+if [ "$1" = "--help" ]; then
+	echo "Usage:"
+	echo -e "\t${0##*/} file description"
+elif [ $# -ne 2 ]; then
+	echo "${0##*/} needs 2 arguments"
+	echo "type ${0##*/} --help to get help"
+	exit 0
+else
+	echo -ne "Uploading $1 \n"
+	ident=`wget -qO- --no-cookies --header "Cookie: user=$cookie" http://www.megaupload.com/ | grep ENCTYPE | cut -d '"' -f 8`
+	value=`echo $ident | cut -d '=' -f 2`
+	data=`curl -s -b "user=$cstr" -F "UPLOAD_IDENTIFIER=$ident" -F "sessionid=$value" -F "file=@$1" -F "message=$2" -F "accept=on" $ident`
+	mega=`echo $data | cut -d "'" -f 6 | cut -d '=' -f 2`
+	echo "Done! http://www.megaupload.com/?d=$mega"
+fi

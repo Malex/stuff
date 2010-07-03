@@ -1,0 +1,7 @@
+gtk-font-name = "Arial 11" 
+#include "/usr/share/themes/Clearlooks/gtk-2.0/gtkrc"
+#include "/usr/share/themes/DarkBloodRewind/gtk-2.0/gtkrc"
+include "/usr/share/themes/Bronsa/gtk-2.0/gtkrc"
+#include "/usr/share/themes/royalty/gtk-2.0/gtkrc"
+gtk-icon-theme-name="oxygen"
+#gtk-icon-theme-name="gnome"

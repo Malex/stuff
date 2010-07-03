@@ -1,0 +1,1 @@
+cat $1 | curl -s -F 'sprunge=<-' http://sprunge.us

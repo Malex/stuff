@@ -1,0 +1,11 @@
+--- bindings.lisp	2010-06-25 12:59:42.924134979 +0200
++++ bindings.lisp.new	2010-06-25 12:59:36.265643406 +0200
+@@ -85,8 +85,6 @@
+   (kbd "C-e") "emacs"
+   (kbd "b")   "banish"
+   (kbd "C-b") "banish"
+-  (kbd "a")   "time"
+-  (kbd "C-a") "time"
+   (kbd "!")   "exec"
+   (kbd "C-g") "abort"
+   *escape-fake-key* "send-escape"

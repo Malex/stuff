@@ -1,0 +1,154 @@
+(in-package :stumpwm)
+(setf *default-package* :stumpwm)
+
+(defun links-list ()
+ (defparameter *links* (list '("http://goosh.org")))
+ (let ((in (open "/tmp/stumplinks" :if-does-not-exist nil)))
+  (when in
+   (loop for line = (read-line in nil) while line do (push (list line) *links*)))))
+
+(defun links-menu ()
+ (links-list)
+ (let ((selection (select-from-menu
+                   (current-screen) *links* "Select link or type esc to close menu")))
+  (if (null selection)
+   (throw 'error "Abort.")
+   (run-shell-command (format nil "uzbl-tabbed ~a"(car selection))))))
+
+(defun get-proc-fd-field (s field)
+ (if s
+  (do ((line (read-line s nil nil) (read-line s nil nil)))
+   ((null line) nil)
+   (let ((split (cl-ppcre:split "\\s*:\\s*" line)))
+    (when (string= (car split) field) (return (cadr split)))))
+  nil))
+
+(defun mem-usage ()
+ (let ((allocated 0))
+  (multiple-value-bind (mem-total mem-free buffers cached)
+   (with-open-file (file #P"/proc/meminfo" :if-does-not-exist nil)
+    (values
+     (read-from-string (get-proc-fd-field file "MemTotal"))
+     (read-from-string (get-proc-fd-field file "MemFree"))
+     (read-from-string (get-proc-fd-field file "Buffers"))
+     (read-from-string (get-proc-fd-field file "Cached"))))
+   (setq allocated (- mem-total (+ mem-free buffers cached)))
+   (/ allocated mem-total))))
+
+(defun fmt-mem-usage (mt)
+ (declare (ignore mt))
+ (format nil "~D%" (truncate (* 100 (mem-usage)))))
+
+(defcommand uzbl-tabbed () ()
+ (run-or-raise "uzbl-tabbed goosh.org" '(:class "Uzbl-tabbed")))
+
+(define-keysym #x1008ff16 "RW")
+(define-keysym #x1008ff14 "PP")
+(define-keysym #x1008ff15 "STOP")
+(define-keysym #x1008ff32 "MUSIC")
+(define-keysym #x1008ff17 "FF")
+(define-keysym #x1008ff11 "VD")
+(define-keysym #x1008ff12 "MUTE")
+(define-keysym #x1008ff13 "VU")
+
+(pushnew '(#\M fmt-mem-usage) *screen-mode-line-formatters* :test 'equal)
+
+(set-fg-color "Gray")
+(set-bg-color "Black")
+(set-border-color "Gray20")
+(set-msg-border-width 10)
+(set-focus-color   "Gray20")
+(set-unfocus-color "black")
+(set-normal-gravity :center)
+(set-font "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*" )
+(set-prefix-key (kbd "C-a"))
+(define-frame-preference "Web"
+ (0 t   t :class "Uzbl-tabbed"))
+
+(setf
+ *mouse-focus-policy*           :click
+ *message-window-gravity*       :center
+ *timeout-wait*                 3 
+ *input-window-gravity*         :center
+ *startup-message*              nil
+ *maxsize-border-width*         1
+ *colors*                       (append *colors*
+     (list "Gray20"
+      "Gray"))
+ *normal-border-width*          1
+ *window-border-style*          :thin
+ *mode-line-border-color*       "Gray20"
+ *mode-line-background-color*   "black"
+ *mode-line-foreground-color*   "grey"
+ *mode-line-timeout*            1
+ *mode-line-position*           :bottom
+ *frame-number-map*             "1234567890"
+ *window-format*                "^90<^n%n^90>^n%m%20t^n"
+ *screen-mode-line-format*      (list
+     "^90[^n"
+     "%n - %w"
+     "^90] [^n"
+     '(:eval (run-shell-command "date +%c | head -c24" t))
+     "^90] [^n"
+     '(:eval (run-shell-command "uname -r | head -c-1" t ))
+     "^90]^n"
+     '(:eval (run-shell-command "echo \"\"" t))
+     "Uptime: "
+     '(:eval (run-shell-command "sh /home/bronsa/bin/uptime.sh" t))
+     " ^90|^n "
+     "Cpu: "
+     '(:eval (run-shell-command "cat /tmp/cpu" t))
+     " - "
+     '(:eval (run-shell-command "uptime | tail -c17 | cut -c 1-4 | head -c-1" t))
+     " ^90|^n "
+     "CpuTemp: "
+     '(:eval (run-shell-command "/home/bronsa/bin/cputemp.sh" t))
+     "^90|^n "
+     "GpuTemp:"
+     '(:eval (run-shell-command "aticonfig --adapter=0 --od-gettemperature | tail -n 1 | cut -c 36-38 | head -c-1" t))
+     " ^90|^n "
+     "Mem: %M"
+     " ^90|^n "
+     "Down: "
+     '(:eval (run-shell-command "cat /tmp/net.in" t))
+     " Up: "
+     '(:eval (run-shell-command "cat /tmp/net.out" t))
+     " ^90|^n "
+     "Playing: "
+     '(:eval (run-shell-command "ncmpcpp --now-playing \"{{%a - }%t}\" | head -c-1" t))))
+
+(update-color-map (current-screen))
+
+(if (not (head-mode-line (current-head)))
+ (toggle-mode-line (current-screen) (current-head)))
+
+(when *initializing*
+ (run-shell-command "sh /home/bronsa/bin/cpu.sh &")
+ (run-shell-command "/home/bronsa/bin/net.sh &")
+ (run-shell-command "xsetroot -cursor_name left_ptr")
+ (run-shell-command "rm -rf /tmp/stumplinks &> /dev/null")
+ (grename "Main")
+ (gnew "Web")
+ (gother)
+ (banish))
+
+(define-key *root-map* (kbd "C-TAB")        "fnext")
+(define-key *root-map* (kbd "ISO_Left_Tab") "fother")
+(define-key *root-map* (kbd "RET")          "fullscreen")
+(define-key *root-map* (kbd "M")            "move-window")
+(define-key *root-map* (kbd "c")            "exec urxvtc")
+(define-key *root-map* (kbd ".")            "eval (links-menu)")
+(define-key *root-map* (kbd "y")            "mark")
+(define-key *root-map* (kbd "F")            "gnew-float")
+(define-key *top-map*  (kbd "C-1")          "exec urxvtc")
+(define-key *top-map*  (kbd "C-2")          "uzbl-tabbed")
+(define-key *top-map*  (kbd "RW")           "exec ncmpcpp prev")
+(define-key *top-map*  (kbd "PP")           "exec ncmpcpp toggle")
+(define-key *top-map*  (kbd "STOP")         "exec ncmpcpp volume -5")
+(define-key *top-map*  (kbd "FF")           "exec ncmpcpp next")
+(define-key *top-map*  (kbd "VD")           "exec ncmpcpp volume -5")
+(define-key *top-map*  (kbd "MUSIC")        "exec ncmpcpp stop")
+(define-key *top-map*  (kbd "MUTE")         "exec amixer sset Master toggle")
+(define-key *top-map*  (kbd "VU")           "exec ncmpcpp volume +5")
+; vim:set ft=lisp et:
+

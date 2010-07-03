@@ -1,0 +1,18 @@
+[general]
+metadata = ~/.offlineimap
+accounts = Personal
+#ui = Noninteractive.Quiet 
+
+[Account Personal]
+autorefresh = 5
+localrepository = MboxPersonal
+remoterepository = ImapPersonal
+
+[Repository MboxPersonal]
+type = Maildir
+localfolders = /home/bronsa/.mail
+
+[Repository ImapPersonal]
+type = Gmail
+remoteuser = brobronsa@gmail.com
+remotepass = *password*

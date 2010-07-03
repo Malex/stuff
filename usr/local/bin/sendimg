@@ -1,0 +1,8 @@
+        link=`curl -F file1=@$1 http://www.dgxstyle.net/sendimg/index.html | awk -F \" '/images/{print $8}'`
+        if [[ $link =~ images/(.+?)/(.+?)/(.+?) ]]
+        then
+            echo "$link"
+        else
+            echo "WAT?"
+        fi
+

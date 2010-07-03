@@ -1,0 +1,20 @@
+--- 
+:accounts: 
+  :default: 
+    :alternates: []
+    :sendmail: /usr/bin/nbsmtp -c /home/bronsa/.nsmtprc
+    :signature: /home/bronsa/.signature
+    :name: Bronsa
+    :email: brobronsa@gmail.com
+:ask_for_to: true
+:discard_snippets_from_encrypted_messages: false
+:sent_source: maildir:/home/bronsa/.mail/target
+:ask_for_cc: false
+:default_attachment_save_dir: ""
+:ask_for_bcc: false
+:ask_for_subject: true
+:thread_by_subject: false
+:confirm_no_attachments: true
+:edit_signature: false
+:confirm_top_posting: true
+:editor: vim

@@ -1,0 +1,16 @@
+#!/bin/sh
+cookie=*cookie*
+
+if [ $# -ne 1 ]; then
+	echo "${0##*/} needs 2 arguments"
+	echo "type ${0##*/} --help to get help"
+	exit 0
+elif [ "$1" = "--help" ]; then
+	echo "Usage:"
+	echo -e "\t${0##*/} url"
+else
+#wget `curl -sH "Cookie: user=${cookie}" "${1}" | grep -Pio "\"http://www\d+.megaupload.com/files/[^\"]+\"" | sed "s/\"//g"`
+	wget --no-cookies --header "Cookie: user=$cookie" "$1"
+fi
+
+

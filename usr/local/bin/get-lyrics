@@ -1,0 +1,5 @@
+#!/bin/sh
+x="`ncmpcpp --now-playing \"%a-%t\"`"
+author=${x%-*}
+song=${x#*-}
+lyrics -a "$author" -s "$song"

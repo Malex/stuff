@@ -1,0 +1,16 @@
+#!/bin/sh
+
+usage ()
+{
+	echo "$0 needs the Music dir to be passed as argoument"
+	echo -e "\tExample: \"$0 ~/Music\""
+	exit 1
+}
+
+[ "$1" ] || usage
+for i in ${1}/*
+do
+	author=$(echo ${i%-*} | sed "s/\ $//")
+	title=$(echo ${i#*-} | sed -e "s/^\ //" -e "s/\.mp3//")
+	id3tag "$i" -a"${author}" -s"${title}"
+done
