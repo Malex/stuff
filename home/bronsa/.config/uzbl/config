@@ -34,7 +34,7 @@ set set_mode        = set mode =
 set set_status      = set status_message =
 
 # Spawn path shortcuts. In spawn the first dir+path match is used in "dir1:dir2:dir3:executable"
-set scripts_dir     = $XDG_DATA_HOME/uzbl:@prefix/share/uzbl/examples/data:scripts
+set scripts_dir     = $XDG_DATA_HOME/uzbl:@prefix/share/uzbl/examples/data:$HOME/.config/uzbl:scripts
 
 # === Hardcoded handlers =====================================================
 
@@ -47,22 +47,22 @@ set authentication_handler = sync_spawn @scripts_dir/auth.py
 # === Dynamic event handlers =================================================
 
 # Open link in new window
-@on_event   NEW_WINDOW     sh 'uzbl-browser -u "$8"' %r
+@on_event   NEW_WINDOW     	uri %s
 # Open in current window
 #@on_event   NEW_WINDOW     uri %s
 # Open in new tab
 #@on_event   NEW_WINDOW     event NEW_TAB %s
 
 # Download handler
-@on_event   DOWNLOAD_REQUEST    spawn @scripts_dir/download.sh %s \@proxy_url
+@on_event   DOWNLOAD_REQUEST    spawn @scripts_dir/dl.sh \"%s\" 
 
 # Load start handler
 @on_event   LOAD_START     @set_status <span foreground="khaki">wait</span>
 # Reset the keycmd on navigation
-@on_event   LOAD_START     @set_mode
-
+@on_event   LOAD_START     @set_mode 
 # Load commit handlers
 @on_event   LOAD_COMMIT    @set_status <span foreground="green">recv</span>
+@on_event   LOAD_COMMIT    script @scripts_dir/scroll-percentage.js
 
 # Load finish handlers
 @on_event   LOAD_FINISH    @set_status <span foreground="gold">done</span>
@@ -80,7 +80,7 @@ set authentication_handler = sync_spawn @scripts_dir/auth.py
 
 set show_status       = 1
 set status_top        = 0
-set status_background = #303030
+set status_background = #262626
 
 set modcmd_style      = weight="bold" foreground="red"
 set keycmd_style      = weight="light" foreground="red"
@@ -91,7 +91,7 @@ set hint_style        = weight="bold"
 
 set mode_section      = <span background="khaki" foreground="black">[\@[\@mode_indicator]\@]</span>
 set keycmd_section    = [<span \@prompt_style>\@[\@keycmd_prompt]\@</span><span \@modcmd_style>\@modcmd</span><span \@keycmd_style>\@keycmd</span><span \@completion_style>\@completion_list</span>]
-set progress_section  = <span foreground="#606060">\@[\@progress.output]\@</span>
+set progress_section  = <span foreground="#606060">\@[\@progress_format]\@</span>
 set scroll_section    = <span foreground="#606060">\@[\@scroll_message]\@</span>
 set uri_section       = <span foreground="#99FF66">\@[\@uri]\@</span>
 set name_section      = <span foreground="khaki">\@[\@NAME]\@</span>
@@ -170,11 +170,13 @@ set ebind     = @mode_bind global,-insert
 @ebind  <Ctrl>a      = event SET_CURSOR_POS 0
 @ebind  <Ctrl>e      = event SET_CURSOR_POS -1
 
-# --- Mouse bindings ---------------------------------------------------------
+# --- Muouse bindings ---------------------------------------------------------
 
 # Middle click open in new window
-@bind  <Button2>  = sh 'if [ "\@SELECTED_URI" ]; then uzbl-browser -u "\@SELECTED_URI"; else echo "uri $(xclip -o | sed s/\\\@/%40/g)" > $4; fi'
-
+@cbind  <Button2>  = sh 'echo "event NEW_TAB \@SELECTED_URI" > $4'
+# Lateral buttons click
+@cbind  <Button8> = back
+@cbind  <Button9> = forward
 # --- Keyboard bindings ------------------------------------------------------
 
 # With this command you can enter in any command at runtime when prefixed with
@@ -186,6 +188,8 @@ set ebind     = @mode_bind global,-insert
 @cbind  k            = scroll vertical -20
 @cbind  h            = scroll horizontal -20
 @cbind  l            = scroll horizontal 20
+@cbind  <Up>         = scroll vertical -20
+@cbind  <Down>       = scroll vertical 20
 @cbind  <Page_Up>    = scroll vertical -100%
 @cbind  <Page_Down>  = scroll vertical 100%
 @cbind  <<           = scroll vertical begin
@@ -195,11 +199,12 @@ set ebind     = @mode_bind global,-insert
 @cbind  <Space>      = scroll vertical end
 
 # Navigation binds
-@cbind  b   = back
-@cbind  m   = forward
-@cbind  S   = stop
-@cbind  r   = reload
-@cbind  R   = reload_ign_cache
+@cbind  b  			= back
+@cbind	<BackSpace> = back
+@cbind  m  			= forward
+@cbind  S   		= stop
+@cbind  r   		= reload
+@cbind  R   		= reload_ign_cache
 
 # Zoom binds
 @cbind  +   = zoom_in
@@ -218,25 +223,33 @@ set ebind     = @mode_bind global,-insert
 @cbind  n   = search
 @cbind  N   = search_reverse
 
+
+# --- Uzbl tabbed binds ---
+# Tab opening
+@cbind  gn              = event NEW_TAB
+@cbind  go<uri:>_       = event NEW_TAB %s
+@cbind  gY              = sh 'echo "event NEW_TAB `xclip -selection primary -o`" > $4'
+# Closing / resting
+@cbind  Q 		        = exit
+# Tab navigating
+@cbind  >               = event NEXT_TAB
+@cbind  <               = event PREV_TAB
+
 # Web searching binds
-@cbind  gg<Google:>_         = uri http://www.google.com/search?q=\@<encodeURIComponent(%r)>\@
-@cbind  \\awiki<Archwiki:>_  = uri http://wiki.archlinux.org/index.php/Special:Search?search=\@<encodeURIComponent(%r)>\@&go=Go
-@cbind  \\wiki<Wikipedia:>_  = uri http://en.wikipedia.org/w/index.php?title=Special:Search&search=\@<encodeURIComponent(%r)>\@&go=Go
+@cbind  gg<Goosh:>_         = uri http://www.goosh.org/#\@<encodeURIComponent(%r)>\@
 
 # Handy binds
 # Set function shortcut
 @cbind  s<var:>_<value:>_  = set %1 = %2
 # Exit binding
-@cbind  ZZ                 = exit
+@cbind  ZZ      	       = exit
+@cbind :q		           = exit
 # Dump config to stdout
 @cbind  !dump              = sh "echo dump_config > $4"
 # Reload all variables in the config
 @cbind  !reload            = sh "sed '/^# === Post-load misc commands/,$d' $1 | grep '^set ' > $4"
 
-# Use socat to directly inject commands into uzbl-core and view events
-# raised by uzbl-core:
 @cbind  <Ctrl><Alt>t  = sh 'xterm -e "socat unix-connect:$5 -"'
-#@cbind  <Ctrl><Alt>t  = sh 'urxvt -e socat unix-connect:$5 -'
 
 # Uri opening prompts
 @cbind  o<uri:>_       = uri %s
@@ -245,10 +258,9 @@ set ebind     = @mode_bind global,-insert
 
 # Mode setting binds
 @cbind  i        = @set_mode insert
-@bind   <Ctrl>i  = @set_mode insert
 
 # Hard-bound bookmarks
-@cbind  gh  = uri http://www.uzbl.org
+@cbind  gh  = uri http://goosh.org
 
 # Yanking & pasting binds
 @cbind  yu  = sh 'echo -n $6 | xclip'
@@ -258,8 +270,6 @@ set ebind     = @mode_bind global,-insert
 @cbind  p   = sh 'echo "uri `xclip -selection primary -o | sed s/\\\@/%40/g`" > $4'
 # Go to the page in clipboard
 @cbind  P   = sh 'echo "uri `xclip -selection clipboard -o | sed s/\\\@/%40/g`" > $4'
-# Start a new uzbl instance from the page in primary selection
-@cbind  'p  = sh 'exec uzbl-browser --uri $(xclip -o)'
 # paste primary selection into keycmd at the cursor position
 @bind <Shift-Insert> = sh 'echo "event INJECT_KEYCMD `xclip -o | sed s/\\\@/%40/g`" > $4'
 
@@ -278,9 +288,9 @@ set follow_hint_keys = 0123456789
 #set follow_hint_keys = qwerty
 #set follow_hint_keys = asdfghjkl;
 #set follow_hint_keys = thsnd-rcgmvwb/;789aefijkopquxyz234
-@cbind  fl*  = script @scripts_dir/follow.js '@follow_hint_keys %s'
+@cbind  f*  = script @scripts_dir/follow.js '@follow_hint_keys %s'
 
-# Form filler binds
+# === Form filler binds =====================================================
 # This script allows you to configure (per domain) values to fill in form
 # fields (eg login information) and to fill in these values automatically.
 # This implementation allows you to save multiple profiles for each form
@@ -291,40 +301,10 @@ set formfiller = spawn @scripts_dir/formfiller.sh
 @cbind  zn  = @formfiller new
 @cbind  zl  = @formfiller load
 
-# --- Uzbl tabbed binds ------------------------------------------------------
-
-# Tab opening
-@cbind  gn              = event NEW_TAB
-@cbind  gN              = event NEW_TAB_NEXT
-@cbind  go<uri:>_       = event NEW_TAB %s
-@cbind  gO<uri:>_       = event NEW_TAB_NEXT %s
-@cbind  gY              = sh 'echo "event NEW_TAB `xclip -selection primary -o | sed s/\\\@/%40/g`" > $4'
-
-# Closing / resting
-@cbind  gC              = exit
-@cbind  gQ              = event CLEAN_TABS
-
-# Tab navigating
-@cbind  g<              = event FIRST_TAB
-@cbind  g>              = event LAST_TAB
-@cbind  gt              = event NEXT_TAB
-@cbind  gT              = event PREV_TAB
-@cbind  gi<index:>_     = event GOTO_TAB %s
-
-# Preset loading
-set preset = event PRESET_TABS
-@cbind  gs<preset save:>_   = @preset save %s
-@cbind  glo<preset load:>_  = @preset load %s
-@cbind  gd<preset del:>_    = @preset del %s
-@cbind  gli                 = @preset list
-
 # === Context menu items =====================================================
 
 # Default context menu
-menu_add Google = set uri = http://google.com
-menu_add Go Home = set uri = http://uzbl.org
-menu_separator separator_1
-menu_add Quit uzbl = exit
+menu_add goosh = set uri = http://goosh.org
 
 # Link context menu
 menu_link_add Print Link = print \@SELECTED_URI
@@ -362,9 +342,8 @@ set stack    = @mode_config stack
 
 set default_mode = command
 
-# === Post-load misc commands ================================================
 
-# Set the "home" page.
-set uri = uzbl.org/doesitwork/@COMMIT
+# === Post-load misc commands ================================================
+@cbind :o<open: >_ = uri %s
 
 # vim: set fdm=syntax:
