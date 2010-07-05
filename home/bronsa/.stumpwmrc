@@ -102,7 +102,7 @@
      '(:eval (run-shell-command "uptime | tail -c17 | cut -c 1-4 | head -c-1" t))
      " ^90|^n "
      "CpuTemp: "
-     '(:eval (run-shell-command "/home/bronsa/bin/cputemp.sh" t))
+     '(:eval (run-shell-command "sh /home/bronsa/bin/cputemp.sh" t))
      "^90|^n "
      "GpuTemp:"
      '(:eval (run-shell-command "aticonfig --adapter=0 --od-gettemperature | tail -n 1 | cut -c 36-38 | head -c-1" t))
@@ -124,7 +124,7 @@
 
 (when *initializing*
  (run-shell-command "sh /home/bronsa/bin/cpu.sh &")
- (run-shell-command "/home/bronsa/bin/net.sh &")
+ (run-shell-command "/home/bronsa/bin/net.sh 1> /dev/null &")
  (run-shell-command "xsetroot -cursor_name left_ptr")
  (run-shell-command "rm -rf /tmp/stumplinks &> /dev/null")
  (grename "Main")
