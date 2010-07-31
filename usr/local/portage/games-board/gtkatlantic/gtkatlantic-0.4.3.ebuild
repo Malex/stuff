@@ -6,8 +6,7 @@ EAPI=3
 
 inherit games eutils
 
-DESCRIPTION="GtkAtlantic is a game like Monopoly(tm). GtkAtlantic is a network
-client that works with the monopd server."
+DESCRIPTION="GtkAtlantic is a game like Monopoly(tm). GtkAtlantic is a network client that works with the monopd server."
 HOMEPAGE="http://gtkatlantic.gradator.net"
 SRC_URI="http://download.tuxfamily.org/gtkatlantic/downloads/v0.4/gtkatlantic-${PV}.tar.gz"
 
