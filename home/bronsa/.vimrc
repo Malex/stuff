@@ -21,14 +21,21 @@ set smartindent
 set cindent       
 set sm         	   
 syntax on           
-set background=dark 
 set wildmenu
 set wildmode=longest:full
 set linespace=0 
 set numberwidth=4
 set scrolloff=10
 set statusline=%F%m%r%h%w[%L][%p%%][%04l,%04v]
+set ofu=syntaxcomplete#Complete
 
+
+filetype plugin on
+
+au CursorMovedI,InsertLeave * if pumvisible() == 0|silent! pclose|endif
+set complete=.,w,b,u,t,i
+set completeopt=menuone,menu,longest,preview
+set omnifunc=syntaxcomplete#Complete
 
 autocmd FileType python set omnifunc=pythoncomplete#Complete
 autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
@@ -40,26 +47,10 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 
 au BufRead *-sup.*        set ft=mail
 
+"source .vim/plugins/supertab.vim
 
-hi StatusLine ctermfg=black ctermbg=white
-hi StatusLineNC ctermfg=black ctermbg=black
-hi Pmenu ctermfg=white ctermbg=darkgray
-hi PmenuSel ctermfg=darkred ctermbg=black
-hi Comment     term=bold ctermfg=darkgrey
-hi SpecialKey    term=bold  ctermfg=darkgray
-hi Normal        ctermfg=gray 
-hi errormsg     term=standout  ctermfg=white ctermbg=red
-hi nontext     term=bold  ctermfg=darkgray
-hi PreProc     term=underline ctermfg=darkgreen
-hi Constant    term=underline ctermfg=darkred
-hi Type        term=underline ctermfg=darkred
-hi Statement   term=bold ctermfg=darkyellow
-hi Identifier  term=underline ctermfg=darkgreen
-hi Ignore      term=bold ctermfg=darkgray
-hi Special     term=underline ctermfg=brown
-hi Error       term=reverse ctermfg=gray
-hi LineNr     ctermfg=darkgrey
-
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-n>"
 
 set fileencodings=utf-8
 set encoding=utf-8
@@ -77,5 +68,7 @@ map s :s<CR>
 map t :tabnew<CR>:e 
 map . <C-r>
 
-
+filetype plugin indent on
+set spelllang=it
 set viminfo='10,\"100,:20,%,n~/.viminfo
+

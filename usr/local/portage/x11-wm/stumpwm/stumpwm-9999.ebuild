@@ -18,7 +18,7 @@ IUSE="doc sbcl clisp source stumpish"
 RESTRICT="strip"
 
 RDEPEND="dev-lisp/cl-ppcre
-		sbcl? ( >=dev-lisp/clx-0.7.3_p20081030 )
+		sbcl? ( >=dev-lisp/cl-clx-0.7.3 )
 		>=dev-lisp/cl-launch-2.11-r1
 		!sbcl? ( !clisp? ( >=dev-lisp/sbcl-1.0.32 ) )
 		!sbcl? ( clisp? ( >=dev-lisp/clisp-2.44[X,new-clx] ) )
@@ -86,12 +86,4 @@ src_install() {
 		common-lisp-install *.{lisp,asd} contrib/*.lisp
 		common-lisp-symlink-asdf
 	fi
-}
-
-pkg_postinst() {
-	use emacs && elisp-site-regen
-}
-
-pkg_postrm() {
-	use emacs && elisp-site-regen
 }
