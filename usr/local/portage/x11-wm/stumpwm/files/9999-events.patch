@@ -5,7 +5,7 @@
                     (scale-screen screen new-heads)
                     (mapc 'group-add-head (screen-groups screen))
 -                   (update-mode-lines screen))
-+                   ;(update-mode-lines screen))
++                   );(update-mode-lines screen))
                   (dformat 1 "Invalid configuration! ~S~%" new-heads)))))))))
  
  (define-stump-event-handler :map-request (parent send-event-p window)
@@ -27,7 +27,7 @@
        (when (and win (find win (top-windows)))
 -        (focus-all win)
 -        (update-all-mode-lines)))))
-+        (focus-all win))))))
++        (focus-all win)))))
 +        ;(update-all-mode-lines)))))
  
  (define-stump-event-handler :button-press (window code x y child time)
