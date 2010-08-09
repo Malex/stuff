@@ -32,7 +32,8 @@ src_prepare() {
 	rm -rf .git
 	cp "${FILESDIR}"/contrib/*.lisp contrib/	
 	epatch "${FILESDIR}"/${PV}-gentoo-fix-configure.ac.patch
-	epatch "${FILESDIR}"/${PV}-gentoo-fix-asd-deps.patch
+	epatch "${FILESDIR}"/${PV}-gentoo-fix-asdf-deps.patch
+	epatch "${FILESDIR}"/${PV}-events.patch
 	epatch "${FILESDIR}"/${PV}-floating-hack.patch
 	epatch "${FILESDIR}"/${PV}-floating-border.patch
 	epatch "${FILESDIR}"/${PV}-message-window.patch
