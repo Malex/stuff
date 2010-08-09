@@ -5,20 +5,20 @@
 EGIT_REPO_URI="git://git.savannah.nongnu.org/stumpwm.git"
 
 EAPI=2
-inherit common-lisp-3 glo-utils eutils git autotools
+inherit common-lisp-2 common-lisp-3 glo-utils eutils elisp-common git autotools
 
 DESCRIPTION="Stumpwm is a tiling, keyboard driven X11 Window Manager written entirely in Common Lisp."
 HOMEPAGE="http://www.nongnu.org/stumpwm/"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS=""
-IUSE="doc sbcl clisp source stumpish"
+KEYWORDS="~amd64 ~x86"
+IUSE="doc sbcl clisp stumpish contrib source"
 
 RESTRICT="strip"
 
 RDEPEND="dev-lisp/cl-ppcre
-		sbcl? ( >=dev-lisp/cl-clx-0.7.3 )
+		sbcl? ( >=dev-lisp/cl-clx-0.7.3-r1 )
 		>=dev-lisp/cl-launch-2.11-r1
 		!sbcl? ( !clisp? ( >=dev-lisp/sbcl-1.0.32 ) )
 		!sbcl? ( clisp? ( >=dev-lisp/clisp-2.44[X,new-clx] ) )
@@ -30,18 +30,27 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	rm -rf .git
-	
+	cp "${FILESDIR}"/contrib/*.lisp contrib/	
+	epatch "${FILESDIR}"/${PV}-gentoo-fix-configure.ac.patch
 	epatch "${FILESDIR}"/${PV}-gentoo-fix-asd-deps.patch
 	epatch "${FILESDIR}"/${PV}-floating-hack.patch
 	epatch "${FILESDIR}"/${PV}-floating-border.patch
 	epatch "${FILESDIR}"/${PV}-message-window.patch
 	epatch "${FILESDIR}"/${PV}-time-erase.patch
-	epatch "${FILESDIR}"/${PV}-gentoo-fix-configure.ac.patch
+	epatch "${FILESDIR}"/${PV}-contrib-mem.patch
 	eautoreconf
 }
 
 src_configure() {
-	econf --with-lisp=$(glo_best_flag sbcl clisp) --with-ppcre="${CLSOURCEROOT}/cl-ppcre"
+	ECONF_OPTS=--with-lisp=$(glo_best_flag sbcl clisp)
+	if use contrib ; then
+		ECONF_OPTS="${ECONF_OPTS} --with-contrib-dir=${CLSOURCEROOT}/${PN}/contrib" 
+	fi
+	if use clisp ; then
+		ECONF_OPTS="${ECONF_OPTS} --with-ppcre=${CLSOURCEROOT}/cl-ppcre"
+	fi
+	echo "${ECONF_OPTS}"
+	econf ${ECONF_OPTS}
 }
 
 src_compile() {
@@ -57,6 +66,7 @@ CLISP_OPTIONS="-ansi -K full -norc --quiet"' \
 		--path-current \
 		--system stumpwm --dump stumpwm.bin \
 		|| die "Cannot create stumpwm binary"
+	
 	makeinfo ${PN}.texi || die "Cannot build info focs"
 	if use doc ; then
 		VARTEXFONTS="${T}"/fonts \
@@ -81,9 +91,12 @@ src_install() {
 		dobin contrib/stumpish
 	fi
 
-	if use source; then
-		rm sample-stumpwmrc.lisp
-		common-lisp-install *.{lisp,asd} contrib/*.lisp
+	rm sample-stumpwmrc.lisp
+	if use contrib; then
+		common-lisp-install contrib/*.lisp
+	fi
+	if use source ; then
+		common-lisp-install *.{lisp,asd}
 		common-lisp-symlink-asdf
 	fi
 }

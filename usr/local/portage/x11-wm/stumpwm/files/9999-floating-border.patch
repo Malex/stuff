@@ -20,13 +20,3 @@
                                  "SteelBlue4")))
      (xlib:clear-area (window-parent window))))
  
-@@ -109,6 +109,9 @@
-   ((current-window :accessor float-group-current-window))
-   )
- 
-+(defmethod group-init ((group float-group))
-+  )
-+
- (defmethod group-add-window ((group float-group) window &key &allow-other-keys)
-   (change-class window 'float-window)
-   (float-window-align window)
