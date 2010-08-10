@@ -8,12 +8,11 @@ EAPI=2
 
 inherit eutils git
 
-DESCRIPTION="jumanji is a highly customizable and functional web browser based
-on the libwebkit web content engine and the gtk+ toolkit."
+DESCRIPTION="jumanji is a highly customizable and functional web browser based on the libwebkit web content engine and the gtk+ toolkit. The idea behind jumanji is a web browser that provides a minimalistic and space saving interface as well as an easy usage that mainly focuses on keyboard interaction like vimperator does"
 
 HOMEPAGE="http://pwmt.org/projects/jumanji"
 
-LICENSE="as-is"
+LICENSE="custom"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="debug"

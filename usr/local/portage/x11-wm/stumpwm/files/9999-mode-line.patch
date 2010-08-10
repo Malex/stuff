@@ -1,0 +1,29 @@
+--- mode-line.lisp	2010-08-10 16:15:10.059999995 +0200
++++ mode-line.lisp	2010-08-10 16:15:04.535999995 +0200
+@@ -26,6 +26,7 @@
+ 	  *mode-line-pad-x*
+ 	  *mode-line-pad-y*
+ 	  *mode-line-position*
++	  *mode-line-highlight-format*
+ 	  *mode-line-timeout*
+           *hidden-window-color*
+ 	  *screen-mode-line-format*
+@@ -53,6 +54,9 @@
+ (defvar *mode-line-position* :top
+   "Specifies where the mode line is displayed. Valid values are :top and :bottom.")
+ 
++(defvar *mode-line-highlight-format* "^R~A^r"
++  "Specifies the way highlight should be on mode-line.")
++
+ (defvar *mode-line-border-width* 1
+   "Specifies how thick the mode line's border will be. Integer value.")
+ 
+@@ -178,7 +182,7 @@
+   (format nil "~a" (group-name (mode-line-current-group ml))))
+ 
+ (defun fmt-highlight (s)
+-  (format nil "^R~A^r" s))
++  (format nil *mode-line-highlight-format* s))
+ 
+ (defun fmt-head-window-list (ml)
+   "Using *window-format*, return a 1 line list of the windows, space seperated."

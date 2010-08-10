@@ -3,7 +3,11 @@
 
 (defmacro read-file (filename)
 `(read-line (open ,filename)))
-;`(let ((file nil)) (with-open-file (stream ,filename)  (loop for line = (read-line stream nil)  while line do (setf file (format nil "~@[~a~%~]~@[~a~]" file line)))) file))
+
+(defun load-data ()
+ (with-open-file (in "/tmp/data")
+  (with-standard-io-syntax
+   (setf *data* (read in)))))
 
 (define-keysym #x1008ff16 "RW")
 (define-keysym #x1008ff14 "PP")
@@ -43,7 +47,7 @@
  *startup-message*              nil 
  *maxsize-border-width*         1
  *colors*                       (append *colors*
-     (list "Gray20"
+     (list "grey10"
       "Gray"))
  *normal-border-width*          1
  *window-border-style*          :thin
@@ -51,9 +55,10 @@
  *mode-line-background-color*   "black"
  *mode-line-foreground-color*   "grey"
  *mode-line-timeout*            1
+ *mode-line-highlight-format*    "^09~a^n"
  *mode-line-position*           :bottom
  *frame-number-map*             "1234567890"
- *window-format*                "^90<^n%n^90>^n%m%20t^n")
+ *window-format*                "^n%n^90-^n%m%20t^n")
 
 (when *initializing*
 
@@ -64,8 +69,6 @@
  (load-module "links-menu")
  
  (mpd-connect)
- (run-shell-command "sh /home/bronsa/bin/mode-line-info.sh &")
- (defvar *uname* (read-file "/tmp/uname"))
  (grename "Main")
  (gnew "Web")
  (gother)
@@ -73,39 +76,37 @@
  
 (setf *screen-mode-line-format* 
  (list
+     '(:eval (format nil "" (load-data)))
      "^90[^n"
      "%g^90] [^n%w"
      "^90]^n"
      '(:eval (format nil "~c" #\Newline))
      "^90[^n%d"
      "^90] [^n"
-     '(:eval *uname*)
+     '(:eval (getf *data* :uname))
      "^90] [^nPlaying: %m" 
      "^90]^n"
      '(:eval (format nil "~c" #\Newline))
      "^90[^nUptime: "
-     "%U" 
-     " ^90|^n "
-     "BOINC: "
-     '(:eval (read-file "/tmp/boinc-status"))
+     "%U"
      " ^90|^n "
      "Cpu: "
-     '(:eval (read-file "/tmp/cpu"))
+     '(:eval (getf *data* :cpuload))
      " - "
-     '(:eval (read-file "/tmp/load-avg"))
+     '(:eval (getf *data* :loadavg))
      " ^90|^n "
      "CpuTemp: "
-     '(:eval (read-file "/tmp/cpu-temp"))
+     '(:eval (getf *data* :cputemp))
      "^90|^n "
      "GpuTemp:"
-     '(:eval (read-file "/tmp/gpu-temp"))
+     '(:eval (getf *data* :gputemp))
      " ^90|^n "
      "Mem: %M"
      " ^90|^n "
      "Down: "
-     '(:eval (read-file "/tmp/net.in"))
+     '(:eval (getf *data* :netin))
      " Up: "
-     '(:eval (read-file "/tmp/net.out"))
+     '(:eval (getf *data* :netout))
      "^90]^n"))
 
 (update-color-map (current-screen))
