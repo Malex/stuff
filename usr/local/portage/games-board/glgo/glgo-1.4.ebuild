@@ -10,7 +10,7 @@ DESCRIPTION="PANDA-glGo is a 3D and 2D Goban, game viewer and editor, client for
 HOMEPAGE="http://www.pandanet.co.jp/English/glgo"
 SRC_URI="http://panda-igs.joyjoy.net/English/glgo/downloads/glGo-${PV}.tar.gz"
 
-LICENSE="restricted"
+LICENSE="custom"
 SLOT="0"
 KEYWORDS="~x86"
 IUSE=""

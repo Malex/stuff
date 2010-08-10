@@ -30,6 +30,8 @@
  (0 t   t :class "Uzbl-tabbed"))
 
 (setf
+ *float-window-border*          2
+ *float-window-title-height*    8
  *escape-fake-key*              (kbd "a")
  *mpd-modeline-fmt*             "%a - %A - %t"
  *terminal*                     "urxvtc"
@@ -63,7 +65,7 @@
  
  (mpd-connect)
  (run-shell-command "sh /home/bronsa/bin/mode-line-info.sh &")
- (defvar *uname* (read-file "/var/uname"))
+ (defvar *uname* (read-file "/tmp/uname"))
  (grename "Main")
  (gnew "Web")
  (gother)
@@ -72,7 +74,7 @@
 (setf *screen-mode-line-format* 
  (list
      "^90[^n"
-     "%n - %w"
+     "%g^90] [^n%w"
      "^90]^n"
      '(:eval (format nil "~c" #\Newline))
      "^90[^n%d"
@@ -81,7 +83,7 @@
      "^90] [^nPlaying: %m" 
      "^90]^n"
      '(:eval (format nil "~c" #\Newline))
-     "Uptime: "
+     "^90[^nUptime: "
      "%U" 
      " ^90|^n "
      "BOINC: "
@@ -104,7 +106,7 @@
      '(:eval (read-file "/tmp/net.in"))
      " Up: "
      '(:eval (read-file "/tmp/net.out"))
-     " ^90^n "))
+     "^90]^n"))
 
 (update-color-map (current-screen))
 
