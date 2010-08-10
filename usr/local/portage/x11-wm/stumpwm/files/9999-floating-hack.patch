@@ -1,7 +1,15 @@
-diff --git a/floating-group.lisp b/floating-group.lisp
-index b6cfc70..1bf23b0 100644
 --- a/floating-group.lisp
 +++ b/floating-group.lisp
+
+@@ -57,7 +57,7 @@
+     (setf (xlib:window-background (window-parent window))
+           (xlib:alloc-color (xlib:screen-default-colormap (screen-number (window-screen window)))
+                             (if (eq (group-current-window group) window)
+-                                "Orange"
++                                "Grey20"
+                                 "SteelBlue4")))
+     (xlib:clear-area (window-parent window))))
+
 @@ -109,6 +109,9 @@
    ((current-window :accessor float-group-current-window))
    )
@@ -12,8 +20,6 @@ index b6cfc70..1bf23b0 100644
  (defmethod group-add-window ((group float-group) window &key &allow-other-keys)
    (change-class window 'float-window)
    (float-window-align window)
-diff --git a/group.lisp b/group.lisp
-index aa441d2..a5fa566 100644
 --- a/group.lisp
 +++ b/group.lisp
 @@ -37,6 +37,8 @@
@@ -25,8 +31,6 @@ index aa441d2..a5fa566 100644
  (defgeneric group-add-window (group window &key &allow-other-keys)
    (:documentation "Called when a window is added to the group. All
  house keeping is already taken care of. Only the group's specific
-diff --git a/stumpwm.lisp b/stumpwm.lisp
-index cf3fc2e..9d6977f 100644
 --- a/stumpwm.lisp
 +++ b/stumpwm.lisp
 @@ -231,12 +231,8 @@ of those expired."
@@ -43,8 +47,6 @@ index cf3fc2e..9d6977f 100644
                   ;; switch to the (old) current group.
                   (let ((netwm-id (first (xlib:get-property (screen-root s) :_NET_CURRENT_DESKTOP))))
                     (when (and netwm-id (< netwm-id (length (screen-groups s))))
-diff --git a/tile-group.lisp b/tile-group.lisp
-index 6408dcd..4687e80 100644
 --- a/tile-group.lisp
 +++ b/tile-group.lisp
 @@ -37,6 +37,12 @@
