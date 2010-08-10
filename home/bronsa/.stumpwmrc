@@ -2,7 +2,8 @@
 (setf *default-package* :stumpwm)
 
 (defmacro read-file (filename)
-`(let ((file nil)) (with-open-file (stream ,filename)  (loop for line = (read-line stream nil)  while line do (setf file (format nil "~@[~a~%~]~@[~a~]" file line)))) file))
+`(read-line (open ,filename)))
+;`(let ((file nil)) (with-open-file (stream ,filename)  (loop for line = (read-line stream nil)  while line do (setf file (format nil "~@[~a~%~]~@[~a~]" file line)))) file))
 
 (define-keysym #x1008ff16 "RW")
 (define-keysym #x1008ff14 "PP")
@@ -28,14 +29,16 @@
 (define-frame-preference "Web"
  (0 t   t :class "Uzbl-tabbed"))
 
-(setf 
- *mpd-modeline-fmt* "%a - %A - %t"
+(setf
+ *escape-fake-key*              (kbd "a")
+ *mpd-modeline-fmt*             "%a - %A - %t"
+ *terminal*                     "urxvtc"
  *data-dir*                     "~/.stumpwm.d/"
  *mouse-focus-policy*           :click
  *message-window-gravity*       :center
  *timeout-wait*                 3 
  *input-window-gravity*         :center
- *startup-message*              "Bronsa@Brace"
+ *startup-message*              nil 
  *maxsize-border-width*         1
  *colors*                       (append *colors*
      (list "Gray20"
@@ -60,7 +63,7 @@
  
  (mpd-connect)
  (run-shell-command "sh /home/bronsa/bin/mode-line-info.sh &")
- (defvar *uname* (run-shell-command "uname -r | head -c-1" t ))
+ (defvar *uname* (read-file "/var/uname"))
  (grename "Main")
  (gnew "Web")
  (gother)
@@ -72,11 +75,10 @@
      "%n - %w"
      "^90]^n"
      '(:eval (format nil "~c" #\Newline))
-     "^90[^n"
-     '(:eval (format-expand *time-format-string-alist* *time-format-string-default*))
-    "^90] [^n"
-    '(:eval *uname*)
-    "^90] [^nPlaying: %m" 
+     "^90[^n%d"
+     "^90] [^n"
+     '(:eval *uname*)
+     "^90] [^nPlaying: %m" 
      "^90]^n"
      '(:eval (format nil "~c" #\Newline))
      "Uptime: "
@@ -109,7 +111,7 @@
 (if (not (head-mode-line (current-head)))
  (toggle-mode-line (current-screen) (current-head)))
 
-(define-key *top-map*  (kbd "MUSIC")         *mpd-map*)
+(define-key *top-map*  (kbd "MUSIC")        *mpd-map*)
 (define-key *root-map* (kbd "C-TAB")        "fnext")
 (define-key *root-map* (kbd "ISO_Left_Tab") "fother")
 (define-key *root-map* (kbd "RET")          "fullscreen")

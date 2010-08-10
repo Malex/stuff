@@ -1,0 +1,14 @@
+--- contrib/mpd.lisp	2010-08-09 22:53:08.823000058 +0200
++++ contrib/mpd.lisp	2010-08-10 14:53:14.117999995 +0200
+@@ -608,7 +608,10 @@
+ 
+ ;;misc. commands
+ (defcommand mpd-connect () ()
+-  (message "~a" (init-mpd-connection)))
++  (let ((result (init-mpd-connection)))
++		(if (equal result t)
++		 (message "~a" result)
++		 nil)))
+ 
+ (defcommand mpd-disconnect () ()
+   "Disconnect from mpd server"

@@ -30,15 +30,10 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	rm -rf .git
-	cp "${FILESDIR}"/contrib/*.lisp contrib/	
-	epatch "${FILESDIR}"/${PV}-gentoo-fix-configure.ac.patch
-	epatch "${FILESDIR}"/${PV}-gentoo-fix-asdf-deps.patch
-	epatch "${FILESDIR}"/${PV}-events.patch
-	epatch "${FILESDIR}"/${PV}-floating-hack.patch
-	epatch "${FILESDIR}"/${PV}-floating-border.patch
-	epatch "${FILESDIR}"/${PV}-message-window.patch
-	epatch "${FILESDIR}"/${PV}-time-erase.patch
-	epatch "${FILESDIR}"/${PV}-contrib-mem.patch
+	cp "${FILESDIR}"/contrib/*.lisp contrib/
+	for i in "${FILESDIR}"/${PV}-*.patch ; do
+		epatch $i
+	done
 	eautoreconf
 }
 

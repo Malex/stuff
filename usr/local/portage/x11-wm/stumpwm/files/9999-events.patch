@@ -1,11 +1,13 @@
---- events.lisp	2010-08-09 22:57:00.553000060 +0200
-+++ events.lisp	2010-08-09 22:58:02.069000060 +0200
-@@ -127,7 +127,7 @@
+--- events.lisp	2010-08-10 14:49:40.903999995 +0200
++++ events.lisp.new	2010-08-10 14:49:31.063999995 +0200
+@@ -126,8 +126,8 @@
+              (if new-heads
                   (progn
                     (scale-screen screen new-heads)
-                    (mapc 'group-add-head (screen-groups screen))
+-                   (mapc 'group-add-head (screen-groups screen))
 -                   (update-mode-lines screen))
-+                   );(update-mode-lines screen))
++                   (mapc 'group-add-head (screen-groups screen)))
++                   ;(update-mode-lines screen))
                   (dformat 1 "Invalid configuration! ~S~%" new-heads)))))))))
  
  (define-stump-event-handler :map-request (parent send-event-p window)
