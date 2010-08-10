@@ -8,7 +8,8 @@ EAPI=2
 
 inherit eutils git
 
-DESCRIPTION="jumanji is a highly customizable and functional web browser based on the libwebkit web content engine and the gtk+ toolkit. The idea behind jumanji is a web browser that provides a minimalistic and space saving interface as well as an easy usage that mainly focuses on keyboard interaction like vimperator does"
+DESCRIPTION="jumanji is a highly customizable and functional web browser based
+on the libwebkit web content engine and the gtk+ toolkit."
 
 HOMEPAGE="http://pwmt.org/projects/jumanji"
 
@@ -24,10 +25,17 @@ DEPEND=">=x11-libs/gtk+-2.18.6\
 		>=dev-libs/glib-2.22.4"
 RDEPEND="${DEPEND}"
 
-src_compile () {
-	emake
+src_prepare() {
+	git_src_prepare
+	tc-export CC
+	append-cflags -std=c99
+	sed -i -e '/${CC}/s:${CFLAGS}:\0 ${INCS}:' Makefile || die
 }
-src_install () {
+
+src_compile() {
+	emake || die "emake failed"
+}
+src_install() {
 	dodoc jumanji.1
 	dobin jumanji
 	if use debug; then
