@@ -9,6 +9,7 @@
   (with-standard-io-syntax
    (setf *data* (read in)))))
 
+
 (define-keysym #x1008ff16 "RW")
 (define-keysym #x1008ff14 "PP")
 (define-keysym #x1008ff15 "STOP")
@@ -67,7 +68,8 @@
  (load-module "uptime")
  (load-module "mpd")
  (load-module "links-menu")
- 
+ (load-module "net")
+
  (mpd-connect)
  (grename "Main")
  (gnew "Web")
@@ -102,11 +104,8 @@
      '(:eval (getf *data* :gputemp))
      " ^90|^n "
      "Mem: %M"
-     " ^90|^n "
-     "Down: "
-     '(:eval (getf *data* :netin))
-     " Up: "
-     '(:eval (getf *data* :netout))
+     " ^90|^n"
+     " %l"
      "^90]^n"))
 
 (update-color-map (current-screen))

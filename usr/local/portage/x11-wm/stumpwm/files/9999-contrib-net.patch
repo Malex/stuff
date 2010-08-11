@@ -1,0 +1,15 @@
+--- contrib/net.lisp	2010-08-09 22:53:08.823000058 +0200
++++ contrib/net.lisp.new	2010-08-11 13:07:08.810000008 +0200
+@@ -157,10 +157,8 @@
+   (let ((net (net-usage))
+ 	dn up)
+     (defun kbmb (x y)
+-      (if (>= (/ x 1e6) y)
+-	  (list (/ x 1e6) "m")
+-	  (list (/ x 1e3) "k")))
++	  (list (/ x 1e3) " KB/s"))
+     (setq dn (kbmb (car net) 0.1)
+ 	  up (kbmb (cadr net) 0.1))
+-    (format nil "~A: ~5,2F~A/~5,2F~A " (net-device)
++    (format nil "~A: ~5,2F~A ^90-^n~5,2F~A" (net-device)
+ 	    (car dn) (cadr dn) (car up) (cadr up))))
