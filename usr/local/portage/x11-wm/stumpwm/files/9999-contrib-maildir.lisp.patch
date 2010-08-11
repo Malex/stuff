@@ -17,7 +17,7 @@
  (defun update-maildir-infos ()
    "Update mail counts for *maildir-path*."
 -  (loop for m in (maildir-mailboxes *maildir-path*)
-+  (loop for m in *maildir-path*
++  (loop for m in (list *maildir-path*)
       collect (length (directory (maildir-mailbox-dir m "new")))
       into nb-new
       collect (length (directory (maildir-mailbox-dir m "cur")))
