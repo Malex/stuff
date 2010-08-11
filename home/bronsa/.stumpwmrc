@@ -1,6 +1,25 @@
 (in-package :stumpwm)
 (setf *default-package* :stumpwm)
 
+
+(when *initializing*
+
+ (load-module "sbclfix")
+ (load-module "mem")
+ (load-module "uptime")
+ (load-module "mpd")
+ (load-module "links-menu")
+ (load-module "net")
+ (load-module "notification")
+ (load-module "maildir")
+ (load-module "cpu")
+
+ (mpd-connect)
+ (grename "Main")
+ (gnew "Web")
+ (gother)
+ (banish))
+ 
 (defmacro read-file (filename)
 `(read-line (open ,filename)))
 
@@ -28,6 +47,7 @@
 (set-unfocus-color "black")
 (set-normal-gravity :center)
 (set-font "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*" )
+(maildir-set-update-time 60)
 
 (defcommand uzbl-tabbed () ()
  (run-or-raise "uzbl-tabbed goosh.org" '(:class "Uzbl-tabbed")))
@@ -35,6 +55,7 @@
  (0 t   t :class "Uzbl-tabbed"))
 
 (setf
+ *maildir-path*                 "/home/bronsa/.mail/target/"
  *float-window-border*          2
  *float-window-title-height*    8
  *escape-fake-key*              (kbd "a")
@@ -61,21 +82,6 @@
  *frame-number-map*             "1234567890"
  *window-format*                "^n%n^90-^n%m%20t^n")
 
-(when *initializing*
-
- (load-module "sbclfix")
- (load-module "mem")
- (load-module "uptime")
- (load-module "mpd")
- (load-module "links-menu")
- (load-module "net")
-
- (mpd-connect)
- (grename "Main")
- (gnew "Web")
- (gother)
- (banish))
- 
 (setf *screen-mode-line-format* 
  (list
      '(:eval (format nil "" (load-data)))
@@ -87,13 +93,13 @@
      "^90] [^n"
      '(:eval (getf *data* :uname))
      "^90] [^nPlaying: %m" 
+     "^90] [^nMails: %M"
      "^90]^n"
      '(:eval (format nil "~c" #\Newline))
      "^90[^nUptime: "
      "%U"
      " ^90|^n "
-     "Cpu: "
-     '(:eval (getf *data* :cpuload))
+     "Cpu: %c"
      " - "
      '(:eval (getf *data* :loadavg))
      " ^90|^n "
@@ -103,10 +109,10 @@
      "GpuTemp:"
      '(:eval (getf *data* :gputemp))
      " ^90|^n "
-     "Mem: %M"
+     "Mem: %R"
      " ^90|^n"
      " %l"
-     "^90]^n"))
+     "^90]^n %N"))
 
 (update-color-map (current-screen))
 
@@ -114,6 +120,8 @@
  (toggle-mode-line (current-screen) (current-head)))
 
 (define-key *top-map*  (kbd "MUSIC")        *mpd-map*)
+(define-key *root-map* (kbd "N")            *notification-map*)
+(define-key *root-map* (kbd "L")            "loadrc")
 (define-key *root-map* (kbd "C-TAB")        "fnext")
 (define-key *root-map* (kbd "ISO_Left_Tab") "fother")
 (define-key *root-map* (kbd "RET")          "fullscreen")

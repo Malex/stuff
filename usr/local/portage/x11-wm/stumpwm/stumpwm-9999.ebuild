@@ -31,6 +31,7 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	rm -rf .git
 	cp "${FILESDIR}"/contrib/*.lisp contrib/
+	mv contrib/notifications.lisp contrib/notification.lisp
 	for i in "${FILESDIR}"/${PV}-*.patch ; do
 		epatch $i
 	done

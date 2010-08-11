@@ -1,0 +1,82 @@
+--- contrib/cpu.lisp	2010-08-11 13:09:29.769000008 +0200
++++ contrib/cpu.lisp.new	2010-08-11 18:06:38.933000007 +0200
+@@ -2,7 +2,7 @@
+ ;;;
+ ;;; Copyright 2007 Anonymous Coward, Jonathan Moore Liles.
+ ;;;
+-;;; Maintainer: Julian Stecklina
++;;; Maintainer: Julian Stecklina edited by Bronsa
+ ;;;
+ ;;; This module is free software; you can redistribute it and/or modify
+ ;;; it under the terms of the GNU General Public License as published by
+@@ -28,7 +28,7 @@
+ ;;;
+ ;;; In your ~/.stumpwmrc
+ ;;;
+-;;; Then you can use "%c %t" in your mode line format.
++;;; Then you can use "%c" in your mode line format.
+ ;;;
+ ;;; NOTES:
+ ;;;
+@@ -36,19 +36,8 @@
+ 
+ (in-package :stumpwm)
+ 
+-(export '(*acpi-thermal-zone*))
+-
+ ;; Install formatters.
+-(dolist (a '((#\c fmt-cpu-usage)
+-             (#\C fmt-cpu-usage-bar)
+-             (#\f fmt-cpu-freq)
+-             (#\t fmt-cpu-temp)))
+-  (pushnew a *screen-mode-line-formatters* :test 'equal))
+-
+-;; Defaults arguments for fmt-cpu-usage-bar
+-(defvar *cpu-usage-bar-width* 10)
+-(defvar *cpu-usage-bar-full* #\#)
+-(defvar *cpu-usage-bar-empty* #\:)
++(pushnew '(#\c fmt-cpu-usage) *screen-mode-line-formatters* :test 'equal)
+ 
+ 
+ (defvar *prev-user-cpu* 0)
+@@ -98,15 +87,7 @@
+   "Returns a string representing current the percent of average CPU
+   utilization."
+   (declare (ignore ml))
+-  (let ((cpu (truncate (* 100 (current-cpu-usage)))))
+-    (format nil "CPU: ^[~A~3D%^] " (bar-zone-color cpu) cpu)))
+-
+-(defun fmt-cpu-usage-bar (ml &optional (width *cpu-usage-bar-width*) (full *cpu-usage-bar-full*) (empty *cpu-usage-bar-empty*))
+-  "Returns a coloured bar-graph representing the current percent of average CPU
+-utilization."
+-  (declare (ignore ml))
+-  (let ((cpu (truncate (* 100 (current-cpu-usage)))))
+-    (bar cpu width full empty)))
++    (format nil "~A%" (truncate (* 100 (current-cpu-usage)))))
+ 
+ (defun get-proc-file-field (fname field)
+   (with-open-file (s fname :if-does-not-exist nil) ;
+@@ -116,23 +97,3 @@
+           (let ((split (cl-ppcre:split "\\s*:\\s*" line)))
+             (when (string= (car split) field) (return (cadr split)))))
+         "")))
+-
+-(defun fmt-cpu-freq (ml)
+-  "Returns a string representing the current CPU frequency (especially useful for laptop users.)"
+-  (declare (ignore ml))
+-  (let ((mhz (parse-integer (get-proc-file-field "/proc/cpuinfo" "cpu MHz")
+-                            :junk-allowed t)))
+-    (if (>= mhz 1000)
+-	(format nil "~,2FGHz" (/ mhz 1000))
+-	(format nil "~DMHz" mhz))))
+-
+-(defvar *acpi-thermal-zone* (first (last
+-				    (pathname-directory
+-				     (first (list-directory "/proc/acpi/thermal_zone/"))))))
+-
+-(defun fmt-cpu-temp (ml)
+-  "Returns a string representing the current CPU temperature."
+-  (declare (ignore ml))
+-  (get-proc-file-field (concatenate 'string "/proc/acpi/thermal_zone/"
+-                                    *acpi-thermal-zone* "/temperature")
+-                       "temperature"))

@@ -20,7 +20,7 @@
 -(defvar *mem-usage-bar-width* 10)
 -(defvar *mem-usage-bar-full* #\#)
 -(defvar *mem-usage-bar-empty* #\:)
-+(pushnew '(#\M fmt-mem-usage) *screen-mode-line-formatters* :test 'equal)
++(pushnew '(#\R fmt-mem-usage) *screen-mode-line-formatters* :test 'equal)
  
  (defun get-proc-fd-field (s field)
    (if s

@@ -1,0 +1,23 @@
+--- contrib/maildir.lisp	2010-08-11 18:19:07.166000081 +0200
++++ contrib/maildir.lisp.new	2010-08-11 18:41:20.887999992 +0200
+@@ -61,11 +61,6 @@
+                    (user-homedir-pathname))
+   "Pathname to the mail directory. Defaults to ~/Mail.")
+ 
+-(defun maildir-mailboxes (maildir)
+-  "Returns a list of all mailboxes in *maildir-path*."
+-   (directory (merge-pathnames (make-pathname :directory '(:relative :wild))
+-                               maildir)))
+-
+ (defun maildir-mailbox-dir (mailbox dir-name)
+   "Returns the specified sub-directory pathname for the provided mailbox."
+   (merge-pathnames (make-pathname :directory (list :relative dir-name)
+@@ -82,7 +77,7 @@
+ 
+ (defun update-maildir-infos ()
+   "Update mail counts for *maildir-path*."
+-  (loop for m in (maildir-mailboxes *maildir-path*)
++  (loop for m in *maildir-path*
+      collect (length (directory (maildir-mailbox-dir m "new")))
+      into nb-new
+      collect (length (directory (maildir-mailbox-dir m "cur")))
