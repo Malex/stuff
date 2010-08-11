@@ -5,6 +5,7 @@
 (when *initializing*
 
  (load-module "sbclfix")
+ ;(load-module "mplayer-patch")
  (load-module "mem")
  (load-module "uptime")
  (load-module "mpd")
@@ -12,10 +13,13 @@
  (load-module "net")
  (load-module "notification")
  (load-module "cpu")
+ (load-module "autotile")
 
  (mpd-connect)
  (grename "Main")
  (gnew "Web")
+ (gnew "AutoTiled")
+ (gnew "Floating")
  (gother)
  (banish))
  
@@ -53,6 +57,7 @@
  (0 t   t :class "Uzbl-tabbed"))
 
 (setf
+ *autotiling-groups*            (list "AutoTiled")
  *suppress-abort-messages*      t
  *float-window-border*          2
  *float-window-title-height*    8
@@ -92,7 +97,7 @@
      '(:eval (getf *data* :loadavg))
      " ^90|^n CpuTemp: "
      '(:eval (getf *data* :cputemp))
-     "^90|^n GpuTemp:"
+     " ^90|^n GpuTemp:"
      '(:eval (getf *data* :gputemp))
      " ^90|^n Mem: %R ^90|^n %l^90]^n %N"))
 
