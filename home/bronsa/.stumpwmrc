@@ -11,7 +11,6 @@
  (load-module "links-menu")
  (load-module "net")
  (load-module "notification")
- (load-module "maildir")
  (load-module "cpu")
 
  (mpd-connect)
@@ -47,7 +46,6 @@
 (set-unfocus-color "black")
 (set-normal-gravity :center)
 (set-font "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*" )
-(maildir-set-update-time 60)
 
 (defcommand uzbl-tabbed () ()
  (run-or-raise "uzbl-tabbed goosh.org" '(:class "Uzbl-tabbed")))
@@ -55,12 +53,11 @@
  (0 t   t :class "Uzbl-tabbed"))
 
 (setf
- *maildir-path*                 "/home/bronsa/.mail/target/"
+ *suppress-abort-messages*      t
  *float-window-border*          2
  *float-window-title-height*    8
  *escape-fake-key*              (kbd "a")
  *mpd-modeline-fmt*             "%a - %A - %t"
- *terminal*                     "urxvtc"
  *data-dir*                     "~/.stumpwm.d/"
  *mouse-focus-policy*           :click
  *message-window-gravity*       :center
@@ -85,34 +82,19 @@
 (setf *screen-mode-line-format* 
  (list
      '(:eval (format nil "" (load-data)))
-     "^90[^n"
-     "%g^90] [^n%w"
-     "^90]^n"
+     "^90[^n%g^90] [^n%w^90]^n"
      '(:eval (format nil "~c" #\Newline))
-     "^90[^n%d"
-     "^90] [^n"
+     "^90[^n%d^90] [^n"
      '(:eval (getf *data* :uname))
-     "^90] [^nPlaying: %m" 
-     "^90] [^nMails: %M"
-     "^90]^n"
+     "^90] [^nPlaying: %m^90]^n"
      '(:eval (format nil "~c" #\Newline))
-     "^90[^nUptime: "
-     "%U"
-     " ^90|^n "
-     "Cpu: %c"
-     " - "
+     "^90[^nUptime: %U ^90|^n Cpu: %c - "
      '(:eval (getf *data* :loadavg))
-     " ^90|^n "
-     "CpuTemp: "
+     " ^90|^n CpuTemp: "
      '(:eval (getf *data* :cputemp))
-     "^90|^n "
-     "GpuTemp:"
+     "^90|^n GpuTemp:"
      '(:eval (getf *data* :gputemp))
-     " ^90|^n "
-     "Mem: %R"
-     " ^90|^n"
-     " %l"
-     "^90]^n %N"))
+     " ^90|^n Mem: %R ^90|^n %l^90]^n %N"))
 
 (update-color-map (current-screen))
 
