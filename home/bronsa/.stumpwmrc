@@ -14,13 +14,13 @@
  (load-module "notification")
  (load-module "cpu")
  (load-module "autotile")
+ (load-module "maildir")
 
  (mpd-connect)
  (grename "Main")
- (gnew "Web")
- (gnew "AutoTiled")
- (gnew "Floating")
- (gother)
+ (gnewbg "Web")
+ (gnewbg "AutoTiled")
+ (gnewbg "Floating")
  (banish))
  
 (defmacro read-file (filename)
@@ -50,13 +50,15 @@
 (set-unfocus-color "black")
 (set-normal-gravity :center)
 (set-font "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*" )
+(maildir-set-update-time 60)
 
 (defcommand uzbl-tabbed () ()
  (run-or-raise "uzbl-tabbed goosh.org" '(:class "Uzbl-tabbed")))
 (define-frame-preference "Web"
  (0 t   t :class "Uzbl-tabbed"))
-
 (setf
+ *maildir-modeline-fmt*         "(%n^90/^n%c)"
+ *maildir-path*                 "/home/bronsa/.mail/INBOX/"
  *autotiling-groups*            (list "AutoTiled")
  *suppress-abort-messages*      t
  *float-window-border*          2
@@ -91,9 +93,11 @@
      '(:eval (format nil "~c" #\Newline))
      "^90[^n%d^90] [^n"
      '(:eval (getf *data* :uname))
-     "^90] [^nPlaying: %m^90]^n"
+     "^90] [^nPlaying: %m^90] [^nMails: %M^90]^n"
      '(:eval (format nil "~c" #\Newline))
-     "^90[^nUptime: %U ^90|^n Cpu: %c - "
+     "^90[^nUptime: %U ^90|^n Boinc: "
+     '(:eval (getf *data* :boinc))
+     " ^90|^n Cpu: %c - "
      '(:eval (getf *data* :loadavg))
      " ^90|^n CpuTemp: "
      '(:eval (getf *data* :cputemp))

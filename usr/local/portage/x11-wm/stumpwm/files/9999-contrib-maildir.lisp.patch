@@ -1,0 +1,38 @@
+--- contrib/maildir.lisp	2010-08-11 19:37:01.664000043 +0200
++++ contrib/maildir.lisp.new	2010-08-12 12:26:33.717999991 +0200
+@@ -61,18 +61,6 @@
+                    (user-homedir-pathname))
+   "Pathname to the mail directory. Defaults to ~/Mail.")
+ 
+-(defun maildir-mailboxes (maildir)
+-  "Returns a list of all mailboxes in *maildir-path*."
+-   (directory (merge-pathnames (make-pathname :directory '(:relative :wild))
+-                               maildir)))
+-
+-(defun maildir-mailbox-dir (mailbox dir-name)
+-  "Returns the specified sub-directory pathname for the provided mailbox."
+-  (merge-pathnames (make-pathname :directory (list :relative dir-name)
+-                                  :name :wild)
+-                   mailbox))
+-
+-
+ (defvar *maildir-new* '()
+   "Number of new mails for each mailbox.")
+ (defvar *maildir-cur* '()
+@@ -82,12 +70,12 @@
+ 
+ (defun update-maildir-infos ()
+   "Update mail counts for *maildir-path*."
+-  (loop for m in (maildir-mailboxes *maildir-path*)
+-     collect (length (directory (maildir-mailbox-dir m "new")))
++  (loop for m in (list *maildir-path*)
++     collect (length (directory (format nil "~a~a/*.*" m "new")))
+      into nb-new
+-     collect (length (directory (maildir-mailbox-dir m "cur")))
++     collect (length (directory (format nil "~a~a/*.*" m "cur")))
+      into nb-cur
+-     collect (length (directory (maildir-mailbox-dir m "tmp")))
++     collect (length (directory (format nil "~a~a/*.*" m "tmp")))
+      into nb-tmp
+      finally (progn (setf *maildir-new* nb-new)
+                     (setf *maildir-cur* nb-cur)
