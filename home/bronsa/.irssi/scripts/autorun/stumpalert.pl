@@ -15,7 +15,7 @@ sub alert
 		my $group = `echo 'groups' | "/usr/bin/stumpish"`;
 		if($group =~ /1\+/)
 			{
-				`echo "echo you have been named on irssi" | "/usr/bin/stumpish"`
+				`echo "notification-add \"^09you have been named on irssi^n\"" | "/usr/bin/stumpish"`
 			}
 		}
 }
