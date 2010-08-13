@@ -38,4 +38,4 @@
       (do-auto-tile (current-group)))))
 
 (add-hook *new-window-hook* #'autotile-hook)
-(add-hook *unmap-window-hook* #'autotile-hook)
+(add-hook *destroy-window-hook* #'autotile-hook)

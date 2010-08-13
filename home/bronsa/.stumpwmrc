@@ -5,7 +5,6 @@
 (when *initializing*
 
  (load-module "sbclfix")
- ;(load-module "mplayer-patch")
  (load-module "mem")
  (load-module "uptime")
  (load-module "mpd")
@@ -17,12 +16,15 @@
  (load-module "maildir")
 
  (mpd-connect)
+
  (grename "Main")
  (gnewbg "Web")
- (gnewbg "AutoTiled")
- (gnewbg "Floating")
+; (gnewbg "AutoTiled")
+; (gnewbg "Floating")
  (banish))
- 
+
+
+
 (defmacro read-file (filename)
 `(read-line (open ,filename)))
 
@@ -30,7 +32,6 @@
  (with-open-file (in "/tmp/data")
   (with-standard-io-syntax
    (setf *data* (read in)))))
-
 
 (define-keysym #x1008ff16 "RW")
 (define-keysym #x1008ff14 "PP")
@@ -56,6 +57,7 @@
  (run-or-raise "uzbl-tabbed goosh.org" '(:class "Uzbl-tabbed")))
 (define-frame-preference "Web"
  (0 t   t :class "Uzbl-tabbed"))
+
 (setf
  *maildir-modeline-fmt*         "(%n^90/^n%c)"
  *maildir-path*                 "/home/bronsa/.mail/INBOX/"
@@ -86,6 +88,8 @@
  *frame-number-map*             "1234567890"
  *window-format*                "^n%n^90-^n%m%20t^n")
 
+(update-color-map (current-screen))
+
 (setf *screen-mode-line-format* 
  (list
      '(:eval (format nil "" (load-data)))
@@ -95,9 +99,7 @@
      '(:eval (getf *data* :uname))
      "^90] [^nPlaying: %m^90] [^nMails: %M^90]^n"
      '(:eval (format nil "~c" #\Newline))
-     "^90[^nUptime: %U ^90|^n Boinc: "
-     '(:eval (getf *data* :boinc))
-     " ^90|^n Cpu: %c - "
+     "^90[^nUptime: %U ^90|^n Cpu: %c - "
      '(:eval (getf *data* :loadavg))
      " ^90|^n CpuTemp: "
      '(:eval (getf *data* :cputemp))
@@ -105,12 +107,9 @@
      '(:eval (getf *data* :gputemp))
      " ^90|^n Mem: %R ^90|^n %l^90]^n %N"))
 
-(update-color-map (current-screen))
-
 (if (not (head-mode-line (current-head)))
  (toggle-mode-line (current-screen) (current-head)))
-
-(define-key *top-map*  (kbd "MUSIC")        *mpd-map*)
+;(define-key *root-map* (kbd "P" )            "eval (window-send-string (format nil \"~a\" (get-x-selection)))")
 (define-key *root-map* (kbd "N")            *notification-map*)
 (define-key *root-map* (kbd "L")            "loadrc")
 (define-key *root-map* (kbd "C-TAB")        "fnext")
@@ -123,6 +122,8 @@
 (define-key *root-map* (kbd "F")            "gnew-float")
 (define-key *top-map*  (kbd "C-1")          "exec urxvtc")
 (define-key *top-map*  (kbd "C-2")          "uzbl-tabbed")
+
+(define-key *top-map*  (kbd "MUSIC")        *mpd-map*)
 (define-key *top-map*  (kbd "RW")           "mpd-prev")
 (define-key *top-map*  (kbd "PP")           "mpd-toggle-pause")
 (define-key *top-map*  (kbd "STOP")         "mpd-stop")

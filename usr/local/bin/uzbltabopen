@@ -1,0 +1,3 @@
+#!/bin/sh
+echo "event NEW_TAB $1" | socat - unix-connect:$(find /tmp -user $UID -name 'uzbl_socket*' -print | sort | tail -1) &> /dev/null
+echo "eval (run-or-raise \"uzbl-tabbed goosh.org\" '(:class \"Uzbl-tabbed\"))" | /usr/bin/stumpish

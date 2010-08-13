@@ -1,5 +1,7 @@
-URxvt.termName: rxvt
-URxvt.perl-ext-common: default,matcher
+URxvt.termName: rxvt-256color
+URxvt.perl-lib: /home/bronsa/.urxvt/
+URxvt.perl-ext-common: default,matcher,mark-yank-urls
+#URxvt.font: xft:Bitstream Vera Sans Mono:pixelsize=11
 URxvt.imlocale: it_IT.UTF-8
 URxvt.background: #000000
 URxvt.foreground: #ffffff
@@ -8,8 +10,8 @@ URxvt.loginShell: true
 URxvt.cursorBlink: true
 URxvt.cursorUnderline: true
 URxvt.saveLines: 32767
-URxvt.scrollBar: true
-URxvt.scrollBar_right: true
+URxvt.scrollBar: false
+#URxvt.scrollBar_right: true
 URxvt.transpscrollbar: true
 URxvt.maximzed: true
 URxvt.tintColor: #000000
@@ -19,14 +21,10 @@ URxvt.cursorColor: #111111
 URxvt.pointerColor:#222222
 URxvt.scrollstyle:      plain
 URxvt.secondaryScroll:  true
-URxvt.tabbed.tabbar-fg: 2
-URxvt.tabbed.tabbar-bg: 0
-URxvt.tabbed.tab-fg:    1
-URxvt.tabbed.tab-bg:    0
-
 URxvt.underlineURLs:      true
 URxvt.keysym.C-Delete:    perl:matcher
-URxvt.urlLauncher: uzbl-tabbed
+URxvt.keysym.M-u: perl:mark-yank-urls:activate_mark_mode
+URxvt.urlLauncher: uzbltabopen
 URxvt.matcher.button: 1
 
 xterm*termName:		xterm
