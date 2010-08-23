@@ -3,35 +3,33 @@
 
 
 (when *initializing*
+  (mapcar #'load-module '( "sbclfix"
+                           "mem"
+                           "uptime"
+                           "mpd"
+                           "links-menu"
+                           "net"
+                           "notification"
+                           "cpu"
+                           "autotile"
+                           "maildir"))
 
- (load-module "sbclfix")
- (load-module "mem")
- (load-module "uptime")
- (load-module "mpd")
- (load-module "links-menu")
- (load-module "net")
- (load-module "notification")
- (load-module "cpu")
- (load-module "autotile")
- (load-module "maildir")
-
- (mpd-connect)
-
- (grename "Main")
- (gnewbg "Web")
-; (gnewbg "AutoTiled")
-; (gnewbg "Floating")
- (banish))
+  (mpd-connect)
+  (grename "Main")
+  (gnewbg "Web")
+  ; (gnewbg "AutoTiled")
+  ; (gnewbg "Floating")
+  (banish))
 
 
 
 (defmacro read-file (filename)
-`(read-line (open ,filename)))
+  `(read-line (open ,filename)))
 
 (defun load-data ()
- (with-open-file (in "/tmp/data")
-  (with-standard-io-syntax
-   (setf *data* (read in)))))
+  (with-open-file (in "/tmp/data")
+    (with-standard-io-syntax
+      (setf *data* (read in)))))
 
 (define-keysym #x1008ff16 "RW")
 (define-keysym #x1008ff14 "PP")
@@ -41,7 +39,6 @@
 (define-keysym #x1008ff11 "VD")
 (define-keysym #x1008ff12 "MUTE")
 (define-keysym #x1008ff13 "VU")
-
 (set-prefix-key (kbd "C-a"))
 (set-fg-color "Gray")
 (set-bg-color "Black")
@@ -54,62 +51,69 @@
 (maildir-set-update-time 60)
 
 (defcommand uzbl-tabbed () ()
- (run-or-raise "uzbl-tabbed goosh.org" '(:class "Uzbl-tabbed")))
+            (run-or-raise "uzbl-tabbed goosh.org" '(:class "Uzbl-tabbed")))
 (define-frame-preference "Web"
- (0 t   t :class "Uzbl-tabbed"))
+                         (0 t   t :class "Uzbl-tabbed"))
 
 (setf
- *maildir-modeline-fmt*         "(%n^90/^n%c)"
- *maildir-path*                 "/home/bronsa/.mail/INBOX/"
- *autotiling-groups*            (list "AutoTiled")
- *suppress-abort-messages*      t
- *float-window-border*          2
- *float-window-title-height*    8
- *escape-fake-key*              (kbd "a")
- *mpd-modeline-fmt*             "%a - %A - %t"
- *data-dir*                     "~/.stumpwm.d/"
- *mouse-focus-policy*           :click
- *message-window-gravity*       :center
- *timeout-wait*                 3 
- *input-window-gravity*         :center
- *startup-message*              nil 
- *maxsize-border-width*         1
- *colors*                       (append *colors*
-     (list "grey10"
-      "Gray"))
- *normal-border-width*          1
- *window-border-style*          :thin
- *mode-line-border-color*       "black"
- *mode-line-background-color*   "black"
- *mode-line-foreground-color*   "grey"
- *mode-line-timeout*            1
- *mode-line-highlight-format*    "^09~a^n"
- *mode-line-position*           :bottom
- *frame-number-map*             "1234567890"
- *window-format*                "^n%n^90-^n%m%20t^n")
+  *mode-line-pad-y*              0
+  *mode-line-pad-y*              0
+  *maildir-modeline-fmt*         "(%n^90/^n%c)"
+  *maildir-path*                 "/home/bronsa/.mail/INBOX/"
+  *autotiling-groups*            (list "AutoTiled")
+  *suppress-abort-messages*      t
+  *float-window-border*          2
+  *float-window-title-height*    8
+  *escape-fake-key*              (kbd "a")
+  *mpd-modeline-fmt*             "%a - %A - %t"
+  *data-dir*                     "~/.stumpwm.d/"
+  *mouse-focus-policy*           :click
+  *message-window-gravity*       :center
+  *timeout-wait*                 3 
+  *input-window-gravity*         :center
+  *startup-message*              nil 
+  *maxsize-border-width*         1
+  *colors*                       (append *colors*
+                                         (list "grey10"
+                                               "Gray"))
+  *normal-border-width*          1
+  *window-border-style*          :thin
+  *mode-line-border-color*       "black"
+  *mode-line-background-color*   "black"
+  *mode-line-foreground-color*   "grey"
+  *mode-line-timeout*            1
+  *mode-line-highlight-format*    "^09~a^n"
+  *mode-line-position*           :bottom
+  *frame-number-map*             "1234567890"
+  *window-format*                "^n%n^90-^n%m%20t^n")
 
 (update-color-map (current-screen))
 
 (setf *screen-mode-line-format* 
- (list
-     '(:eval (format nil "" (load-data)))
-     "^90[^n%g^90] [^n%w^90]^n"
-     '(:eval (format nil "~c" #\Newline))
-     "^90[^n%d^90] [^n"
-     '(:eval (getf *data* :uname))
-     "^90] [^nPlaying: %m^90] [^nMails: %M^90]^n"
-     '(:eval (format nil "~c" #\Newline))
-     "^90[^nUptime: %U ^90|^n Cpu: %c - "
-     '(:eval (getf *data* :loadavg))
-     " ^90|^n CpuTemp: "
-     '(:eval (getf *data* :cputemp))
-     " ^90|^n GpuTemp:"
-     '(:eval (getf *data* :gputemp))
-     " ^90|^n Mem: %R ^90|^n %l^90]^n %N"))
+      (list
+        '(:eval (format nil "" (load-data)))
+        "^90[^n%g^90]^n"
+        '(:eval (if (not (equal "" (fmt-window-list (head-mode-line (car (screen-heads (car *screen-list*))))))) (format nil "^90 [^n%w^90]^n")))
+        '(:eval (format nil "~c" #\Newline))
+        "^90[^n%d^90] [^n"
+        '(:eval (getf *data* :uname))
+        "^90] [^nPlaying: %m^90] [^nMails: %M^90]^n"
+        '(:eval (format nil "~c" #\Newline))
+        "^90[^nUptime: %U ^90|^n Cpu: %c - "
+        '(:eval (getf *data* :loadavg))
+        " ^90|^n CpuTemp: "
+        '(:eval (getf *data* :cputemp))
+        " ^90|^n GpuTemp:"
+        '(:eval (getf *data* :gputemp))
+        " ^90|^n Mem: %R ^90|^n %l^90]^n %N"))
+
+(defcommand paste-x-selection () (:rest)
+            "Universal rat-less X paste."
+            (let ((cmd (concatenate 'string "insert " (get-x-selection))))
+              (eval-command cmd)))
 
 (if (not (head-mode-line (current-head)))
- (toggle-mode-line (current-screen) (current-head)))
-;(define-key *root-map* (kbd "P" )            "eval (window-send-string (format nil \"~a\" (get-x-selection)))")
+  (toggle-mode-line (current-screen) (current-head)))
 (define-key *root-map* (kbd "N")            *notification-map*)
 (define-key *root-map* (kbd "L")            "loadrc")
 (define-key *root-map* (kbd "C-TAB")        "fnext")
@@ -120,9 +124,10 @@
 (define-key *root-map* (kbd ".")            "links-menu")
 (define-key *root-map* (kbd "y")            "mark")
 (define-key *root-map* (kbd "F")            "gnew-float")
+(define-key *root-map* (kbd "P")            "paste-x-selection")
+
 (define-key *top-map*  (kbd "C-1")          "exec urxvtc")
 (define-key *top-map*  (kbd "C-2")          "uzbl-tabbed")
-
 (define-key *top-map*  (kbd "MUSIC")        *mpd-map*)
 (define-key *top-map*  (kbd "RW")           "mpd-prev")
 (define-key *top-map*  (kbd "PP")           "mpd-toggle-pause")

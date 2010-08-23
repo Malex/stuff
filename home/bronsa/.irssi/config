@@ -158,7 +158,7 @@ settings = {
     print_active_channel = "yes";
     show_nickmode = "yes";
     theme = "bronsa";
-#  autolog = "yes";
+    autolog = "yes";
   };
   "perl/core/scripts" = { nicklist_automode = "SCREEN"; };
   "irc/dcc" = { dcc_autoget = "yes"; };
@@ -170,6 +170,8 @@ hilights = (
 );
 logs = { };
 ignores = (
+  { mask = "Angel_Devil"; level = "ALL"; },
+  { mask = "[AI]"; level = "ALL"; }
 );
 
 servers = (
@@ -182,6 +184,14 @@ servers = (
     autoconnect = "yes";
   },
 
+  {
+    address = "irc.kama.it.cx";
+    chatnet = "Kama";
+    port = "6667";
+    use_ssl = "no";
+    ssl_verify = "no";
+    autoconnect = "yes";
+  },
   "servers",
   {
     address = "irc.freenode.net";
@@ -203,8 +213,8 @@ servers = (
   },
   "servers",
   {
-    address = "irc.iside.us";
-    chatnet = "Iside";
+    address = "irc.ihteam.net";
+    chatnet = "ihteam";
     port = "6667";
     use_ssl = "no";
     ssl_verify = "no";
@@ -223,33 +233,30 @@ servers = (
 chatnets = {
   Azzurra = {
     type = "IRC";
-    autosendcmd = "/^msg nickserv identify *password*;wait 2000";
+    autosendcmd = "/^identify asdasd6;wait 2000";
   };
 
-  Iside = {
-    type = "IRC";
-  };
-  HUF = {
-    type = "IRC";
-  };
+  Kama = { type = "IRC"; };
+  ihteam = { type = "IRC"; };
+  HUF = { type = "IRC"; };
   Freenode = {
     type = "IRC";
-    autosendcmd = "/^identify *password*;wait 2000";
+    autosendcmd = "/^identify asdasd6;wait 2000";
   };
   Bitlbee = {
     type = "IRC";
-    autosendcmd = "/^identify *password*;wait 2000";
+    autosendcmd = "/^identify asdasd6;wait 2000";
   };
 };
 channels = (
-  { name = "#gentoo"; chatnet = "Azzurra"; autojoin = "yes"; },
+  { name = "#ihteam"; chatnet = "ihteam"; autojoin = "yes"; },
   { name = "#infernet"; chatnet = "Azzurra"; autojoin = "yes"; },
   { name = "#linux"; chatnet = "Azzurra"; autojoin = "yes"; },
   { name = "#php"; chatnet = "Azzurra"; autojoin = "yes"; },
   { name = "#stumpwm"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#gentoo"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#gentoo-it"; chatnet = "Freenode"; autojoin = "yes"; },
-  { name = "#dreamos"; chatnet = "Azzurra"; autojoin = "yes"; },
+  { name = "#lisp"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#siderus"; chatnet = "Freenode"; autojoin = "yes"; },
   { name = "#funtoo"; chatnet = "Freenode"; autojoin = "yes"; }
 );
