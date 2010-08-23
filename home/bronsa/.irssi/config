@@ -233,7 +233,7 @@ servers = (
 chatnets = {
   Azzurra = {
     type = "IRC";
-    autosendcmd = "/^identify asdasd6;wait 2000";
+    autosendcmd = "/^identify *psw*;wait 2000";
   };
 
   Kama = { type = "IRC"; };
@@ -241,11 +241,11 @@ chatnets = {
   HUF = { type = "IRC"; };
   Freenode = {
     type = "IRC";
-    autosendcmd = "/^identify asdasd6;wait 2000";
+    autosendcmd = "/^identify *psw*;wait 2000";
   };
   Bitlbee = {
     type = "IRC";
-    autosendcmd = "/^identify asdasd6;wait 2000";
+    autosendcmd = "/^identify *psw*;wait 2000";
   };
 };
 channels = (
