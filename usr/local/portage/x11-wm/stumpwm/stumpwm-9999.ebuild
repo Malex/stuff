@@ -5,7 +5,7 @@
 EGIT_REPO_URI="git://git.savannah.nongnu.org/stumpwm.git"
 
 EAPI=2
-inherit common-lisp-2 common-lisp-3 glo-utils eutils elisp-common git autotools
+inherit common-lisp-2 common-lisp-3 glo-utils eutils git autotools
 
 DESCRIPTION="Stumpwm is a tiling, keyboard driven X11 Window Manager written entirely in Common Lisp."
 HOMEPAGE="http://www.nongnu.org/stumpwm/"
