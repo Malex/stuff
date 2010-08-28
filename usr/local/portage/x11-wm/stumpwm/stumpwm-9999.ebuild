@@ -46,7 +46,6 @@ src_configure() {
 	if use clisp ; then
 		ECONF_OPTS="${ECONF_OPTS} --with-ppcre=${CLSOURCEROOT}/cl-ppcre"
 	fi
-	echo "${ECONF_OPTS}"
 	econf ${ECONF_OPTS}
 }
 
