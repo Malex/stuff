@@ -4,7 +4,7 @@
 
 EAPI=3
 
-inherit games
+inherit eutils games
 
 DESCRIPTION="PANDA-glGo is a 3D and 2D Goban, game viewer and editor, client for IGS-PandaNet and interface for GNU Go"
 HOMEPAGE="http://www.pandanet.co.jp/English/glgo"
@@ -48,7 +48,7 @@ src_prepare() {
 }
 
 src_install () {
-	make
+	emake
 	dolib.so usr/lib/games/glGo/*.so
 	dodoc usr/share/doc/glGo/*
 	insinto /usr/share/games/glGo
