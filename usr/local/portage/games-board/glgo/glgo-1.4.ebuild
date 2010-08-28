@@ -32,18 +32,6 @@ RDEPEND="${DEPEND}"
 src_prepare() {
 	check_license glGo.license
 	rm glGo.install glGo.remove glGo.license
-	for i in "/usr/games
-		/usr/lib/games/glGo\
-		/usr/share/games/glGo/\
-		/usr/share/doc/glGo/html/images\
-		/usr/share/games/glGo/cs_CZ\
-		/usr/share/games/glGo/de_DE\
-		/usr/share/games/glGo/es_ES\
-		/usr/share/games/glGo/nl_NL\
-		/usr/share/games/glGo/zh_CN"
-	do
-		dodir $i
-	done
 	cp ${FILESDIR}/Makefile ${WORKDIR}
 }
 
