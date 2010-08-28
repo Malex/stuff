@@ -11,5 +11,5 @@
      (setq dn (kbmb (car net) 0.1)
  	  up (kbmb (cadr net) 0.1))
 -    (format nil "~A: ~5,2F~A/~5,2F~A " (net-device)
-+    (format nil "~A: ~5,2F~A ^90-^n~5,2F~A" (net-device)
++    (format nil "~A: ~5,2F~A ^90- ^n~5,2F~A" (net-device)
  	    (car dn) (cadr dn) (car up) (cadr up))))

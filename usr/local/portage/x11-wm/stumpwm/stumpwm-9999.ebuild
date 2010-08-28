@@ -74,6 +74,9 @@ CLISP_OPTIONS="-ansi -K full -norc --quiet"' \
 src_install() {
 	common-lisp-export-impl-args $(glo_best_flag sbcl clisp)
 	dobin stumpwm.bin
+	if use sbcl; then
+		CL_NORC="--noinform --disable-ldb --lose-on-corruption --no-sysinit --no-userinit --disable-debugger"
+	fi
 	make_wrapper stumpwm "/usr/bin/stumpwm.bin ${CL_NORC} ${CL_EVAL} '(stumpwm:stumpwm \":0\")'"
 	make_session_desktop StumpWM /usr/bin/stumpwm
 
