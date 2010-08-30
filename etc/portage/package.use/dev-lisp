@@ -1,0 +1,2 @@
+dev-lisp/clisp new-clx
+dev-lisp/sbcl threads ldb

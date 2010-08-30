@@ -1,0 +1,2 @@
+net-print/cups dbus
+net-print/hplip static-ppds hpcups new-hpcups scanner -X 

@@ -1,0 +1,3 @@
+dev-lang/mono moonlight
+dev-lang/php ctype filter mysql sqlite fastcgi cgi curl curlwrappers gd ftp xml mysqli simplexml
+dev-lang/python sqlite

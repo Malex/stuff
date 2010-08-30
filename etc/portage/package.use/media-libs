@@ -1,0 +1,4 @@
+media-libs/libquicktime ffmpeg lame
+media-libs/libsdl directfb 
+media-libs/alsa-lib alisp
+media-libs/jpeg static-libs

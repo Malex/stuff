@@ -1,0 +1,4 @@
+x11-libs/cairo directfb xcb
+x11-libs/openmotif xft
+x11-libs/qt-gui dbus
+x11-libs/qt-core optimized-qmake

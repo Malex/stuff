@@ -1,0 +1,2 @@
+media-video/mplayer oss directfb ssse3 sysfs cpudetection custom-cpuopts win32codecs
+media-video/vlc avahi directfb xcb
