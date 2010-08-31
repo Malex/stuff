@@ -1,0 +1,151 @@
+
+These are the packages that would be merged, in order:
+
+Calculating dependencies  ... done!
+[ebuild   R   ] dev-lisp/commonqt-9999  USE="tutorial" 0 kB [1]
+
+Total: 1 package (1 reinstall), Size of downloads: 0 kB
+Portage tree and overlays:
+ [0] /usr/portage
+ [1] /usr/local/portage
+
+
+>>> Verifying ebuild manifests
+
+>>> Emerging (1 of 1) dev-lisp/commonqt-9999 from local_overlay
+ * checking ebuild checksums ;-) ...                                     [ ok ]
+ * checking auxfile checksums ;-) ...                                    [ ok ]
+ * checking miscfile checksums ;-) ...                                   [ ok ]
+
+ * Using bashrcng profile [ 1.1.4 ]
+ * CPV:  dev-lisp/commonqt-9999
+ * REPO: local_overlay
+ * USE:  amd64 elibc_glibc kernel_linux multilib tutorial userland_GNU
+>>> Unpacking source...
+ * GIT update -->
+ *    repository: 		git://gitorious.org/commonqt/commonqt.git
+ *    at the commit: 		782982aae01314258702a02827288717eae80116
+ *    branch: 			master
+ *    storage directory: 	"/usr/portage/distfiles/git-src/commonqt"
+Cloning into /var/tmp/portage/dev-lisp/commonqt-9999/work/commonqt-9999...
+done.
+>>> Unpacked to /var/tmp/portage/dev-lisp/commonqt-9999/work/commonqt-9999
+>>> Source unpacked in /var/tmp/portage/dev-lisp/commonqt-9999/work
+>>> Preparing source in /var/tmp/portage/dev-lisp/commonqt-9999/work/commonqt-9999 ...
+ * Applying qt.asd.patch ...
+ [ ok ]
+>>> Source prepared.
+>>> Configuring source in /var/tmp/portage/dev-lisp/commonqt-9999/work/commonqt-9999 ...
+ * Running qmake ...
+ *  - fixed CONFIG in commonqt.pro
+ [ ok ]
+>>> Source configured.
+>>> Compiling source in /var/tmp/portage/dev-lisp/commonqt-9999/work/commonqt-9999 ...
+ * Running qmake ...
+ [ ok ]
+make -j5 -l5 
+x86_64-pc-linux-gnu-g++ -c -pipe -march=native -mtune=generic -O2 -pipe -D_REENTRANT -Wall -W -fPIC -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED -I/usr/share/qt4/mkspecs/linux-g++ -I. -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui -I/usr/include/qt4 -I/usr/include/smoke -I. -o commonqt.o commonqt.cpp
+commonqt.cpp:36: warning: unused parameter ‘classId’
+commonqt.cpp:77: warning: unused parameter ‘classId’
+rm -f libcommonqt.so.1.0.0 libcommonqt.so libcommonqt.so.1 libcommonqt.so.1.0
+x86_64-pc-linux-gnu-g++ -Wl,--hash-style=gnu,-O1 -Wl,--as-needed,-z,now -Wl,-rpath,/usr/lib64/qt4 -shared -Wl,-soname,libcommonqt.so.1 -o libcommonqt.so.1.0.0 commonqt.o   -L/usr/lib64/qt4 -lsmokeqtcore -lQtGui -L/usr/lib64 -L/usr/lib64/qt4 -L/usr/X11R6/lib -lQtCore -lgthread-2.0 -lrt -lglib-2.0 -lpthread  
+ln -s libcommonqt.so.1.0.0 libcommonqt.so
+ln -s libcommonqt.so.1.0.0 libcommonqt.so.1
+ln -s libcommonqt.so.1.0.0 libcommonqt.so.1.0
+>>> Source compiled.
+>>> Test phase [not enabled]: dev-lisp/commonqt-9999
+
+>>> Install commonqt-9999 into /var/tmp/portage/dev-lisp/commonqt-9999/image/ category dev-lisp
+>>> Completed installing commonqt-9999 into /var/tmp/portage/dev-lisp/commonqt-9999/image/
+
+
+>>> Installing (1 of 1) dev-lisp/commonqt-9999
+ * checking 28 files for package collisions
+ * Running lafilefixer ...
+ [ ok ]
+--- /usr/
+--- /usr/share/
+--- /usr/share/common-lisp/
+--- /usr/share/common-lisp/systems/
+>>> /usr/share/common-lisp/systems/qt.asd -> /usr/share/common-lisp/source/commonqt/qt.asd
+--- /usr/share/common-lisp/source/
+--- /usr/share/common-lisp/source/commonqt/
+>>> /usr/share/common-lisp/source/commonqt/marshal.lisp
+>>> /usr/share/common-lisp/source/commonqt/qt-tutorial.asd
+>>> /usr/share/common-lisp/source/commonqt/unmarshal.lisp
+>>> /usr/share/common-lisp/source/commonqt/libcommonqt.so.1.0.0
+>>> /usr/share/common-lisp/source/commonqt/qlist.lisp
+>>> /usr/share/common-lisp/source/commonqt/libcommonqt.so
+>>> /usr/share/common-lisp/source/commonqt/libcommonqt.so.1.0
+>>> /usr/share/common-lisp/source/commonqt/call.lisp
+>>> /usr/share/common-lisp/source/commonqt/commonqt.cpp
+>>> /usr/share/common-lisp/source/commonqt/commonqt.pro
+>>> /usr/share/common-lisp/source/commonqt/qt-repl.asd
+>>> /usr/share/common-lisp/source/commonqt/qt.asd
+>>> /usr/share/common-lisp/source/commonqt/meta.lisp
+>>> /usr/share/common-lisp/source/commonqt/repl-integration.lisp
+--- /usr/share/common-lisp/source/commonqt/tutorial/
+>>> /usr/share/common-lisp/source/commonqt/tutorial/conv.lisp
+>>> /usr/share/common-lisp/source/commonqt/tutorial/t14.lisp
+>>> /usr/share/common-lisp/source/commonqt/ffi.lisp
+>>> /usr/share/common-lisp/source/commonqt/test.lisp
+>>> /usr/share/common-lisp/source/commonqt/utils.lisp
+>>> /usr/share/common-lisp/source/commonqt/qvariant.lisp
+>>> /usr/share/common-lisp/source/commonqt/info.lisp
+>>> /usr/share/common-lisp/source/commonqt/commonqt.h
+>>> /usr/share/common-lisp/source/commonqt/commonqt.o
+>>> /usr/share/common-lisp/source/commonqt/package.lisp
+>>> /usr/share/common-lisp/source/commonqt/property.lisp
+>>> /usr/share/common-lisp/source/commonqt/libcommonqt.so.1
+>>> /usr/share/common-lisp/source/commonqt/reader.lisp
+>>> Safely unmerging already-installed instance...
+No package files given... Grabbing a set.
+--- replaced sym /usr/share/common-lisp/systems/qt.asd
+--- replaced dir /usr/share/common-lisp/systems
+--- replaced obj /usr/share/common-lisp/source/commonqt/utils.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/unmarshal.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/tutorial/t14.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/tutorial/conv.lisp
+--- replaced dir /usr/share/common-lisp/source/commonqt/tutorial
+--- replaced obj /usr/share/common-lisp/source/commonqt/test.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/repl-integration.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/reader.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/qvariant.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/qt.asd
+--- replaced obj /usr/share/common-lisp/source/commonqt/qt-tutorial.asd
+--- replaced obj /usr/share/common-lisp/source/commonqt/qt-repl.asd
+--- replaced obj /usr/share/common-lisp/source/commonqt/qlist.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/property.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/package.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/meta.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/marshal.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/libcommonqt.so.1.0.0
+--- replaced obj /usr/share/common-lisp/source/commonqt/libcommonqt.so.1.0
+--- replaced obj /usr/share/common-lisp/source/commonqt/libcommonqt.so.1
+--- replaced obj /usr/share/common-lisp/source/commonqt/libcommonqt.so
+--- replaced obj /usr/share/common-lisp/source/commonqt/info.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/ffi.lisp
+--- replaced obj /usr/share/common-lisp/source/commonqt/commonqt.pro
+--- replaced obj /usr/share/common-lisp/source/commonqt/commonqt.o
+--- replaced obj /usr/share/common-lisp/source/commonqt/commonqt.h
+--- replaced obj /usr/share/common-lisp/source/commonqt/commonqt.cpp
+--- replaced obj /usr/share/common-lisp/source/commonqt/call.lisp
+--- replaced dir /usr/share/common-lisp/source/commonqt
+--- replaced dir /usr/share/common-lisp/source
+--- replaced dir /usr/share/common-lisp
+--- replaced dir /usr/share
+--- replaced dir /usr
+>>> Original instance of package unmerged safely.
+
+ * Messages for package dev-lisp/commonqt-9999:
+
+ * GIT update -->
+ *    repository: 		git://gitorious.org/commonqt/commonqt.git
+ *    at the commit: 		782982aae01314258702a02827288717eae80116
+ *    branch: 			master
+ *    storage directory: 	"/usr/portage/distfiles/git-src/commonqt"
+>>> Auto-cleaning packages...
+
+>>> No outdated packages were found on your system.
+
+ * GNU info directory index is up-to-date.

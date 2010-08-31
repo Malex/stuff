@@ -1,0 +1,68 @@
+--- qt.asd	2010-08-30 18:23:52.023000018 +0200
++++ qt.asd.new	2010-08-30 22:03:18.493000039 +0200
+@@ -4,64 +4,12 @@
+ (in-package :qt-system)
+ 
+ 
+-;;; .cpp
+-
+-(defclass cpp->so (source-file)
+-  ())
+-
+-(defmethod source-file-type ((c cpp->so) (s module)) "cpp")
+-
+-(defmethod output-files ((operation compile-op) (c cpp->so))
+-  (list (merge-pathnames "libcommonqt.so" (component-pathname c))))
+-
+-(defmethod perform ((o load-op) (c cpp->so))
+-  t)
+-
+-(defmethod perform ((o compile-op) (c cpp->so))
+-  (unless (operation-done-p o c)
+-    (when (find-package :qt)
+-      (set (find-symbol "*LOADED*" :qt) nil))
+-    (unless (zerop (run-shell-command
+-                    "if which gmake; then gmake -C ~S; else make -C ~:*~S; fi"
+-                    (namestring
+-                     (make-pathname :name nil
+-                                    :type nil
+-                                    :defaults (component-pathname c)))))
+-      (error 'operation-error :component c :operation o))))
+-
+-
+-;;; qmake
+-
+-(defclass makefile (source-file)
+-  ())
+-
+-(defmethod source-file-type ((c makefile) (s module)) nil)
+-
+-(defmethod output-files ((operation compile-op) (c makefile))
+-  (list (make-pathname :name "Makefile"
+-		       :type nil
+-		       :defaults (component-pathname c))))
+-
+-(defmethod perform ((o load-op) (c makefile))
+-  t)
+-
+-(defmethod perform ((o compile-op) (c makefile))
+-  (unless (operation-done-p o c)
+-    (when (find-package :qt)
+-      (set (find-symbol "*LOADED*" :qt) nil))
+-    (unless (zerop (run-shell-command
+-                    "qmake ~S"
+-                    (namestring
+-		     (merge-pathnames "commonqt.pro" (component-pathname c)))))
+-      (error 'operation-error :component c :operation o))))
+-
+ 
+ ;;; system
+ 
+ (defsystem :qt
+     :serial t
+-    :components (#-(or mswindows windows win32) (makefile "commonqt.pro")
+-                 #-(or mswindows windows win32) (cpp->so "commonqt")
++    :components (
+                  (:file "package")
+                  (:file "utils")
+                  (:file "ffi")
